@@ -2,8 +2,8 @@ import json
 import unittest
 from pathlib import Path
 
-from agentfoundry.codex_adapter import project_execution_brief
-from agentfoundry.execution_plan import build_portable_execution_plan, validate_portable_execution_plan
+from agentcaravan.codex_adapter import project_execution_brief
+from agentcaravan.execution_plan import build_portable_execution_plan, validate_portable_execution_plan
 
 
 ROOT = Path(__file__).parents[2]
