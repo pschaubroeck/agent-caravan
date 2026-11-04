@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "agentfoundry/policy.schema.json",
+  "title": "Agent Caravan Policy",
+  "type": "object",
+  "required": ["artifact_type", "id", "version", "scope", "policy_type", "input_validation", "tool_authorization", "approval_requirements", "retry", "escalation", "termination"],
+  "properties": {
+    "artifact_type": {"const": "policy"},
+    "id": {"type": "string", "minLength": 1},
+    "version": {"type": "string", "minLength": 1},
+    "scope": {"type": "string", "enum": ["shared", "organization", "team", "local", "session"]},
+    "policy_type": {"type": "string", "enum": ["guardrail", "approval", "quality", "termination"]},
+    "input_validation": {"type": "object"},
+    "tool_authorization": {"type": "object"},
+    "knowledge_access": {
+      "type": "object",
+      "properties": {
+        "external_sources": {"type": "string", "enum": ["enabled", "approved_sources", "disabled"]},
+        "approved_sources": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {"type": "string", "minLength": 1},
+              {
+                "type": "object",
+                "required": ["source"],
+                "properties": {
+                  "id": {"type": "string", "minLength": 1},
+                  "source": {"type": "string", "minLength": 1}
+                },
+                "additionalProperties": false
+              }
+            ]
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "approval_requirements": {"type": "array"},
+    "retry": {"type": "object"},
+    "escalation": {"type": "object"},
+    "termination": {"type": "object"}
+  },
+  "additionalProperties": true
+}

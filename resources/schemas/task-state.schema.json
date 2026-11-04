@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "agentfoundry/task-state.schema.json",
+  "title": "Agent Caravan Task State",
+  "type": "object",
+  "required": ["task_id", "objective", "selected_context", "plan", "decisions", "evidence", "approvals", "blockers", "artifacts", "status"],
+  "properties": {
+    "task_id": {"type": "string", "minLength": 1},
+    "objective": {"type": "string", "minLength": 1},
+    "selected_context": {"type": "object"},
+    "plan": {"type": "array"},
+    "decisions": {"type": "array"},
+    "evidence": {
+      "type": "array",
+      "items": {"$ref": "execution-contracts.schema.json#/$defs/evidence"}
+    },
+    "approvals": {
+      "type": "array",
+      "items": {"$ref": "execution-contracts.schema.json#/$defs/approval"}
+    },
+    "checkpoints": {
+      "type": "array",
+      "items": {"$ref": "execution-contracts.schema.json#/$defs/checkpoint"}
+    },
+    "idempotency_records": {
+      "type": "array",
+      "items": {"$ref": "execution-contracts.schema.json#/$defs/idempotencyRecord"}
+    },
+    "blockers": {"type": "array"},
+    "artifacts": {"type": "array"},
+    "execution_events": {"type": "array", "items": {"$ref": "execution-contracts.schema.json#/$defs/executionEvent"}},
+    "topology_conformance": {"type": "object"},
+    "scheduling_conformance": {"type": "object"},
+    "execution_diagnostics": {"type": "object"},
+    "status": {"type": "string", "enum": ["active", "blocked", "completed", "cancelled"]}
+  },
+  "additionalProperties": true
+}

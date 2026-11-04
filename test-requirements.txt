@@ -1,0 +1,2 @@
+# Reserved for project-specific test tooling used by centralized pipeline jobs.
+pytest==8.4.2

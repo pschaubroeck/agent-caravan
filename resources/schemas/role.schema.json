@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "agentfoundry/role.schema.json",
+  "title": "Role artifact",
+  "allOf": [
+    {"$ref": "portable-artifact-identity.schema.json"},
+    {"properties": {"artifact_type": {"const": "role"}, "mission": {"type": "string", "minLength": 1}, "responsibilities": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}}, "required": ["mission", "responsibilities"]}
+  ]
+}

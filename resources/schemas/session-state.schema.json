@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "agentfoundry/session-state.schema.json",
+  "title": "Agent Caravan Session State",
+  "type": "object",
+  "required": ["session_id", "task_id", "selected_context", "status", "started_at"],
+  "properties": {
+    "session_id": {"type": "string", "minLength": 1},
+    "task_id": {"type": "string", "minLength": 1},
+    "selected_context": {"type": "object"},
+    "runtime": {"type": "object"},
+    "execution_realization": {"$ref": "execution-contracts.schema.json#/$defs/executionRealization"},
+    "topology_conformance": {"type": "object"},
+    "execution_events": {"type": "array", "items": {"$ref": "execution-contracts.schema.json#/$defs/executionEvent"}},
+    "scheduling_conformance": {"type": "object"},
+    "execution_diagnostics": {"type": "object"},
+    "active_roles": {"type": "array", "items": {"type": "string"}},
+    "role_turns": {"type": "array", "items": {"$ref": "execution-contracts.schema.json#/$defs/roleTurn"}},
+    "handoffs": {"type": "array"},
+    "evidence": {
+      "type": "array",
+      "items": {"$ref": "execution-contracts.schema.json#/$defs/evidence"}
+    },
+    "checkpoints": {
+      "type": "array",
+      "items": {"$ref": "execution-contracts.schema.json#/$defs/checkpoint"}
+    },
+    "status": {"type": "string", "enum": ["active", "paused", "completed", "failed", "cancelled"]},
+    "started_at": {"type": "string"},
+    "ended_at": {"type": ["string", "null"]}
+  },
+  "additionalProperties": true
+}

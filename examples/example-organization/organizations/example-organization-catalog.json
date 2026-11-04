@@ -1,0 +1,25 @@
+{
+  "artifact_type": "organization-catalog",
+  "id": "example-organization",
+  "version": "1.0.0",
+  "scope": "organization",
+  "name": "Example Organization Catalog",
+  "published_artifacts": {
+    "role": [
+      "program-manager",
+      "product-owner",
+      "tech-owner",
+      "engineer",
+      "quality-engineer",
+      "software-architect",
+      "release-manager"
+    ],
+    "team-blueprint": ["information-technology-core-team"],
+    "team-instance": [
+      "example-organization-platform-team",
+      "example-organization-product-team"
+    ],
+    "runtime-adapter": ["codex-desktop-agent-runtime"],
+    "runtime-profile": ["codex-desktop-information-technology-core-team"]
+  }
+}

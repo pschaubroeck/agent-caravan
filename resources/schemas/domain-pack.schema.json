@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "agentfoundry/domain-pack.schema.json",
+  "title": "Domain pack",
+  "allOf": [
+    {"$ref": "portable-artifact-identity.schema.json"},
+    {"properties": {"artifact_type": {"const": "domain-pack"}, "domain_type": {"type": "string", "minLength": 1}, "base_role_ids": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true}, "parent_domain_id": {"type": "string", "minLength": 1}}, "required": ["domain_type"]}
+  ]
+}

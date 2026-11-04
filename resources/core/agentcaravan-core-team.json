@@ -1,0 +1,39 @@
+{
+  "artifacts": [
+    {"artifact_type": "role", "id": "program-manager", "version": "1.0.0", "scope": "shared", "name": "Program Manager", "mission": "Coordinate intake, sequencing, process obligations, dependency and security-review routing, and approval follow-up.", "responsibilities": ["intake and routing", "sequencing and coordination", "process-state tracking", "dependency and security-review routing", "approval-path follow-up"]},
+    {"artifact_type": "role", "id": "product-owner", "version": "1.0.0", "scope": "shared", "name": "Product Owner", "mission": "Turn requests into prioritized, implementation-ready work while preserving product intent, UX expectations, and business value.", "responsibilities": ["product intent", "scope definition", "UX expectations", "acceptance criteria", "backlog readiness", "UAT input"], "does_not_own": ["technical implementation shape", "architecture", "code", "release mechanics"]},
+    {"artifact_type": "role", "id": "tech-owner", "version": "1.0.0", "scope": "shared", "name": "Tech Owner", "mission": "Turn approved product intent into a viable technical approach and execution breakdown.", "responsibilities": ["technical direction", "implementation approach", "engineering breakdown", "technical risk identification", "dependency and integration identification", "engineering documentation"]},
+    {"artifact_type": "role", "id": "engineer", "version": "1.0.0", "scope": "shared", "name": "Engineer", "mission": "Implement the approved technical approach in working code and surface execution reality early.", "responsibilities": ["code changes", "implementation details", "automated tests", "code-adjacent documentation", "execution feedback"]},
+    {"artifact_type": "role", "id": "quality-engineer", "version": "1.0.0", "scope": "shared", "name": "Quality Engineer", "mission": "Ensure work is verifiable, testable, and release-ready by shaping validation early and producing readiness evidence.", "responsibilities": ["verification strategy", "testability input", "validation execution", "automation guidance", "defect reporting", "quality-risk assessment", "UAT support", "readiness evidence"]},
+    {"artifact_type": "role", "id": "software-architect", "version": "1.1.0", "scope": "shared", "name": "Software Architect", "mission": "Protect system integrity through architectural guardrails, cross-system design coherence, and structural risk guidance.", "responsibilities": ["architectural guardrails", "cross-system design coherence", "structural risk review", "major technical tradeoff guidance", "architecture documentation"]},
+    {"artifact_type": "role", "id": "release-manager", "version": "1.0.0", "scope": "shared", "name": "Release Manager", "mission": "Coordinate merge, pipeline, release, promotion, and delivery-state mechanics within approved boundaries.", "responsibilities": ["merge-request readiness", "pipeline coordination", "release sequencing", "promotion mechanics", "delivery-state tracking"]},
+    {
+      "artifact_type": "team-blueprint", "id": "information-technology-core-team", "version": "1.1.0", "scope": "shared", "name": "Information Technology Core Team",
+      "core_roles": ["program-manager", "product-owner", "tech-owner", "engineer", "quality-engineer", "software-architect", "release-manager"],
+      "mandatory_debates": ["solution + testability debate", "review resolution debate"],
+      "triggered_debates": ["scope debate", "risk debate", "priority debate", "technical debt debate"],
+      "debate_participants": {
+        "solution + testability debate": ["product-owner", "tech-owner", "quality-engineer"],
+        "review resolution debate": ["engineer", "tech-owner", "software-architect"],
+        "scope debate": ["product-owner", "tech-owner"],
+        "risk debate": ["quality-engineer", "tech-owner", "software-architect"],
+        "priority debate": ["program-manager", "product-owner", "tech-owner"],
+        "technical debt debate": ["engineer", "tech-owner", "product-owner", "software-architect"]
+      },
+      "blocking_lanes": ["program-manager", "product-owner", "tech-owner", "engineer", "quality-engineer", "software-architect", "release-manager"],
+      "stage_owners": ["program-manager", "product-owner", "tech-owner", "engineer", "quality-engineer", "software-architect", "release-manager"],
+      "coverage_requirements": {"implementation": ["engineer"], "quality": ["quality-engineer"]},
+      "documentation_ownership": {
+        "program-manager": "process-state and approval-routing visibility",
+        "product-owner": "product-facing clarification and release narrative",
+        "tech-owner": "design notes and engineering expectations",
+        "engineer": "code-adjacent documentation",
+        "quality-engineer": "verification evidence and readiness rationale",
+        "software-architect": "architecture guidance and structural decision records",
+        "release-manager": "delivery-state and release-status artifacts"
+      },
+      "governance_rules": ["new dependencies, integrations, or external tools may trigger security or governance obligations", "route identified obligations through program-manager"],
+      "runtime_requirements": ["structured_output_contracts", "dynamic_context_loading"]
+    }
+  ]
+}

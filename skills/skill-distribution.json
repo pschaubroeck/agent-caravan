@@ -1,0 +1,40 @@
+{
+  "format_version": "1.0.0",
+  "skills": [
+    {
+      "id": "agent-caravan-builder",
+      "path": "skills/agent-caravan-builder",
+      "runtimes": ["codex", "opencode", "kiro"]
+    },
+    {
+      "id": "agent-caravan-codex-orchestrator",
+      "path": "skills/agent-caravan-codex-orchestrator",
+      "runtimes": ["codex"]
+    },
+    {
+      "id": "agent-caravan-resolver",
+      "path": "skills/agent-caravan-resolver",
+      "runtimes": ["codex", "opencode", "kiro"]
+    },
+    {
+      "id": "agent-caravan-runtime-adapter-builder",
+      "path": "skills/agent-caravan-runtime-adapter-builder",
+      "runtimes": ["codex", "opencode", "kiro"]
+    },
+    {
+      "id": "agent-caravan-validator",
+      "path": "skills/agent-caravan-validator",
+      "runtimes": ["codex", "opencode", "kiro"]
+    },
+    {
+      "id": "agent-caravan-opencode-orchestrator",
+      "path": "skills/agent-caravan-opencode-orchestrator",
+      "runtimes": ["opencode"]
+    },
+    {
+      "id": "agent-caravan-kiro-orchestrator",
+      "path": "skills/agent-caravan-kiro-orchestrator",
+      "runtimes": ["kiro"]
+    }
+  ]
+}

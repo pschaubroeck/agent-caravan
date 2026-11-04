@@ -1,0 +1,127 @@
+{
+  "artifact_type": "execution-profile",
+  "id": "information-technology-core-team-feature-delivery",
+  "version": "1.3.0",
+  "scope": "shared",
+  "name": "Information Technology Core Team Feature Delivery",
+  "team_blueprint_id": "information-technology-core-team",
+  "policy_ids": ["information-technology-core-team-safety-policy"],
+  "entry_roles": ["product-owner", "tech-owner"],
+  "activation_policy": {
+    "primary_roles": ["engineer"],
+    "supporting_roles": ["quality-engineer"],
+    "mandatory_reviewers": [],
+    "conditional_roles": {
+      "software-architect": "cross-system change, architectural guardrail departure, structural risk, or material maintainability tradeoff is present",
+      "program-manager": "dependency, security, governance, sequencing, or approval work is present",
+      "release-manager": "merge, pipeline, release, or promotion work is requested"
+    }
+  },
+  "reasoning_policy": {
+    "default": "standard",
+    "role_defaults": {
+      "program-manager": "standard",
+      "product-owner": "standard",
+      "tech-owner": "deep",
+      "software-architect": "deep",
+      "engineer": "standard",
+      "quality-engineer": "standard"
+    },
+    "stage_overrides": {
+      "solution-and-testability": {
+        "quality-engineer": "deep"
+      },
+      "quality-and-uat": {
+        "quality-engineer": "deep"
+      }
+    }
+  },
+  "topology": {
+    "mode": "coordinator-worker",
+    "task_ownership": "caller-retains",
+    "handoff_semantics": "mixed",
+    "supported_modes": ["sequential", "handoff", "coordinator", "coordinator-worker", "human-gated"],
+    "parallel_lanes": [
+      {"id": "quality-preparation", "stage_id": "solution-and-testability", "role_ids": ["quality-engineer"], "purpose": "independent quality preparation"},
+      {"id": "architecture-research", "stage_id": "architectural-review", "role_ids": ["software-architect"], "purpose": "triggered structural risk review", "condition": "cross-system change, architectural guardrail departure, structural risk, or material maintainability tradeoff is present"}
+    ],
+    "serial_fallback": {"mode": "run-in-order", "lane_ids": ["quality-preparation", "architecture-research"]},
+    "work_items": [
+      {"id": "product-scope", "stage_id": "solution-and-testability", "role_id": "product-owner", "purpose": "Confirm product intent, scope, and acceptance criteria"},
+      {"id": "technical-breakdown", "stage_id": "technical-breakdown", "role_id": "tech-owner", "purpose": "Produce a viable, executable technical breakdown", "depends_on": ["product-scope"]},
+      {"id": "quality-preparation", "stage_id": "solution-and-testability", "role_id": "quality-engineer", "purpose": "Prepare testability and risk guidance", "depends_on": ["product-scope"], "lane_id": "quality-preparation"},
+      {"id": "architecture-review", "stage_id": "architectural-review", "role_id": "software-architect", "purpose": "Review triggered structural risks", "depends_on": ["technical-breakdown"], "condition": "cross-system change, architectural guardrail departure, structural risk, or material maintainability tradeoff is present", "lane_id": "architecture-research"},
+      {"id": "implementation", "stage_id": "implementation", "role_id": "engineer", "purpose": "Implement the approved scope", "depends_on": ["technical-breakdown", "architecture-review"]},
+      {"id": "quality-validation", "stage_id": "quality-and-uat", "role_id": "quality-engineer", "purpose": "Validate implementation and record quality evidence", "depends_on": ["implementation"]},
+      {"id": "product-acceptance", "stage_id": "quality-and-uat", "role_id": "product-owner", "purpose": "Assess product acceptance", "depends_on": ["implementation"]}
+    ]
+  },
+  "stages": [
+    {"id": "solution-and-testability", "roles": ["product-owner", "tech-owner", "quality-engineer"], "mode": "coordinator", "output": "clear product scope and early testability guidance"},
+    {"id": "technical-breakdown", "roles": ["tech-owner"], "mode": "handoff", "output": "viable engineering-ready technical breakdown"},
+    {"id": "architectural-review", "roles": ["software-architect"], "mode": "coordinator", "condition": "cross-system change, architectural guardrail departure, structural risk, or material maintainability tradeoff is present", "output": "architectural guidance or approval"},
+    {"id": "implementation", "roles": ["engineer"], "mode": "handoff", "output": "working code, tests, and code-adjacent documentation"},
+    {"id": "quality-and-uat", "roles": ["quality-engineer", "product-owner"], "mode": "sequential", "output": "validation evidence and product acceptance input"},
+    {"id": "review-resolution", "roles": ["engineer", "tech-owner", "software-architect"], "mode": "coordinator", "condition": "review feedback is disputed or materially changes the solution", "output": "resolved review decision"},
+    {"id": "release", "roles": ["release-manager"], "mode": "handoff", "condition": "release or promotion is explicitly requested", "output": "release or promotion evidence"}
+  ],
+  "communication": {
+    "requires_structured_handoff": true,
+    "handoff_semantics": "mixed",
+    "allowed_role_handoffs": [
+      {"from": "tech-owner", "to": "engineer", "purpose": "implementation breakdown", "ownership": "explicit-ownership-transfer"},
+      {"from": "engineer", "to": "quality-engineer", "purpose": "validation request", "ownership": "caller-retains"},
+      {"from": "quality-engineer", "to": "engineer", "purpose": "defect or coverage remediation", "ownership": "explicit-ownership-transfer"},
+      {"from": "release-manager", "to": "program-manager", "purpose": "release blocker or approval follow-up", "ownership": "caller-retains"}
+    ]
+  },
+  "tool_requirements": [
+    {
+      "id": "repository-inspection",
+      "side_effect_class": "read-only",
+      "permission_boundary": "selected repository and task scope",
+      "approval_required": false,
+      "evidence_kinds": ["tool-request", "tool-result"]
+    },
+    {
+      "id": "local-implementation-edit",
+      "side_effect_class": "local-write",
+      "permission_boundary": "selected repository working tree",
+      "approval_required": false,
+      "evidence_kinds": ["changed-artifact", "verification-result"]
+    },
+    {
+      "id": "remote-mutation",
+      "side_effect_class": "remote-write",
+      "permission_boundary": "approved remote system and requested operation",
+      "approval_required": true,
+      "approval_lane": "human",
+      "evidence_kinds": ["approval", "tool-request", "tool-result"]
+    }
+  ],
+  "evidence_requirements": [
+    {"kind": "decision-record", "required": true, "owner_role": "tech-owner", "stage_id": "technical-breakdown"},
+    {"kind": "handoff-record", "required": true, "owner_role": "tech-owner", "stage_id": "technical-breakdown"},
+    {"kind": "quality-evidence", "required": true, "owner_role": "quality-engineer", "stage_id": "quality-and-uat"},
+    {"kind": "completion-record", "required": true, "owner_role": "tech-owner", "stage_id": null}
+  ],
+  "termination": {
+    "success_conditions": ["approved scope is implemented", "required quality evidence exists", "product acceptance is recorded or explicitly waived", "requested release work is complete or handed off"],
+    "success_criteria": [
+      {"id": "approved-scope-implemented", "description": "Approved scope is implemented.", "assessor_roles": ["product-owner"]},
+      {"id": "required-quality-evidence-exists", "description": "Required quality evidence exists.", "assessor_roles": ["quality-engineer"]},
+      {"id": "product-acceptance-recorded-or-waived", "description": "Product acceptance is recorded or explicitly waived.", "assessor_roles": ["product-owner"]},
+      {"id": "requested-release-work-complete-or-handed-off", "description": "Requested release work is complete or handed off; report not applicable when no release was requested.", "assessor_roles": ["release-manager", "program-manager", "product-owner"]}
+    ],
+    "failure_conditions": ["required role coverage cannot be activated", "mandatory debate cannot reach a viable direction", "required approval is denied or unavailable"],
+    "max_review_resolution_iterations": 3
+  },
+  "escalation": {
+    "unresolved_product_scope": "product-owner",
+    "unresolved_technical_direction": "software-architect",
+    "unresolved_quality_risk": "quality-engineer",
+    "unresolved_governance_or_approval": "program-manager",
+    "human_approval_required_for": ["remote mutation", "new dependency or integration", "release or deployment", "production-impacting action"]
+  },
+  "required_outputs": ["task record", "decision record", "handoff records", "quality evidence", "completion record"]
+}

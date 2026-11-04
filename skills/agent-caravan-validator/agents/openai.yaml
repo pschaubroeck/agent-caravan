@@ -1,0 +1,4 @@
+interface:
+  display_name: "Agent Caravan Framework Validator"
+  short_description: "Validate AI organization framework artifacts"
+  default_prompt: "Use $agent-caravan-validator to validate AI organization framework artifacts."

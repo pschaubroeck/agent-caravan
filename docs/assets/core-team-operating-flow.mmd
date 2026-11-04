@@ -1,0 +1,20 @@
+flowchart TD
+    A[New request] --> B[Program Manager triages request]
+    B --> C[Product Owner defines scope and acceptance]
+    C --> D{Scope clear?}
+    D -- No --> E[Scope debate<br/>Product Owner + Tech Owner]
+    E --> C
+    D -- Yes --> F[Required solution and testability debate<br/>Product Owner + Tech Owner + Architect + Quality Engineer]
+    F --> G[Tech Owner creates engineering breakdown]
+    G --> H[Engineer implements]
+    H --> I[Quality Engineer validates<br/>Product Owner provides acceptance input]
+    I --> J{Structural risk or shared-pattern concern?}
+    J -- Yes --> K[Software Architect reviews]
+    J -- No --> L{Review feedback disputed<br/>or materially changes solution?}
+    K --> L
+    L -- Yes --> M[Review resolution debate<br/>Engineer + Tech Owner + Architect]
+    M --> H
+    L -- No --> N{Release or promotion requested?}
+    N -- Yes --> O[Release Manager handles requested delivery work]
+    N -- No --> P[Program Manager tracks follow-up and closes]
+    O --> P

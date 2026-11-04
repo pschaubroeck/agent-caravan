@@ -1,0 +1,80 @@
+{
+  "artifact_type": "execution-profile",
+  "id": "dependency-approval-experiment",
+  "version": "1.0.0",
+  "scope": "session",
+  "name": "Dependency Approval Experiment",
+  "team_blueprint_id": "information-technology-core-team",
+  "policy_ids": ["information-technology-core-team-safety-policy"],
+  "entry_roles": ["program-manager"],
+  "activation_policy": {
+    "primary_roles": ["engineer"],
+    "mandatory_reviewers": ["tech-owner"]
+  },
+  "topology": {
+    "mode": "sequential",
+    "task_ownership": "caller-retains",
+    "handoff_semantics": "mixed",
+    "supported_modes": ["sequential", "handoff", "human-gated"]
+  },
+  "stages": [
+    {"id": "need-assessment", "roles": ["engineer"], "mode": "sequential", "output": "documented project need and alternatives"},
+    {"id": "candidate-assessment", "roles": ["engineer"], "mode": "sequential", "output": "candidate evidence assessed against pinned organizational or explicitly experiment-defined criteria"},
+    {"id": "independent-review", "roles": ["tech-owner"], "mode": "handoff", "output": "independent technical review and recommendation"},
+    {"id": "dependency-change", "roles": ["engineer"], "mode": "handoff", "condition": "candidate passes assessment and independent review", "output": "request scoped dependency change and remain blocked until required human approval; apply only after approval"},
+    {"id": "human-approval", "roles": ["program-manager"], "mode": "human-gated", "condition": "candidate passes supplied hard criteria and independent review, and the dependency change request is blocked pending approval", "output": "human approval decision recorded before the scoped dependency change proceeds"},
+    {"id": "verification", "roles": ["engineer"], "mode": "sequential", "condition": "dependency change was applied", "output": "verification evidence for the scoped change"},
+    {"id": "rejection", "roles": ["program-manager"], "mode": "sequential", "condition": "candidate fails a supplied hard criterion before an approval request is eligible", "output": "evidence-linked rejection decision with no dependency approval request or change"},
+    {"id": "completion", "roles": ["program-manager"], "mode": "sequential", "output": "completion record with disposition, required evidence, applicable approval, and unresolved conditions"}
+  ],
+  "communication": {
+    "requires_structured_handoff": true,
+    "handoff_semantics": "mixed",
+    "allowed_role_handoffs": [
+      {"from": "engineer", "to": "tech-owner", "purpose": "independent candidate review", "ownership": "caller-retains"},
+      {"from": "tech-owner", "to": "program-manager", "purpose": "review recommendation and approval routing", "ownership": "caller-retains"},
+      {"from": "program-manager", "to": "engineer", "purpose": "approved scoped dependency change", "ownership": "caller-retains"}
+    ]
+  },
+  "tool_requirements": [
+    {
+      "id": "candidate-evidence-inspection",
+      "side_effect_class": "read-only",
+      "permission_boundary": "pinned experiment evidence and disposable repository",
+      "approval_required": false,
+      "evidence_kinds": ["candidate-evidence", "tool-request", "tool-result"]
+    },
+    {
+      "id": "dependency-artifact-change",
+      "side_effect_class": "local-write",
+      "permission_boundary": "dependency manifest in the disposable repository; installation target outside the repository",
+      "approval_required": true,
+      "approval_lane": "program-manager",
+      "evidence_kinds": ["approval", "changed-artifact"]
+    },
+    {
+      "id": "change-verification",
+      "side_effect_class": "read-only",
+      "permission_boundary": "disposable repository and its configured verification commands",
+      "approval_required": false,
+      "evidence_kinds": ["verification-result"]
+    }
+  ],
+  "evidence_requirements": [
+    {"kind": "technical-need", "required": true, "owner_role": "engineer", "stage_id": "need-assessment"},
+    {"kind": "candidate-evidence", "required": true, "owner_role": "engineer", "stage_id": "candidate-assessment"},
+    {"kind": "independent-review", "required": true, "owner_role": "tech-owner", "stage_id": "independent-review"},
+    {"kind": "completion-record", "required": true, "owner_role": "program-manager", "stage_id": "completion"}
+  ],
+  "termination": {
+    "success_conditions": ["acceptance or rejection disposition is recorded", "required evidence is referenced", "dependency change, if any, follows recorded approval"],
+    "failure_conditions": ["required candidate evidence is missing or unpinned", "required approval is unavailable", "dependency change occurs without approval", "required role or runtime capability is unavailable"]
+  },
+  "required_outputs": ["candidate assessment", "independent review", "evidence-linked disposition", "completion record"],
+  "escalation": {
+    "unresolved_candidate_evidence": "engineer",
+    "unresolved_technical_review": "tech-owner",
+    "unresolved_governance_or_approval": "program-manager",
+    "human_approval_required_for": ["new_dependency_or_integration"]
+  }
+}

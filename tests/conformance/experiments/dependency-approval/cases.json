@@ -1,0 +1,115 @@
+{
+  "scenario_version": "1.0.0",
+  "scenarios": [
+    {
+      "id": "dependency-approval-accept",
+      "purpose": "Accept a proposed dependency only after candidate evidence, independent review, and human approval satisfy the experiment policy.",
+      "task": {
+        "objective": "Assess and, if eligible, introduce the externally identified dependency candidate.",
+        "requested_action": "evaluate dependency candidate for the documented project need",
+        "candidate_input": "required-external-candidate-evidence",
+        "eligibility": "Do not execute until candidate identity, exact release, artifact hash, technical need, compatibility, license assessment, vulnerability snapshot, maintenance assessment, dependency footprint, and pre-agreed organizational or explicitly experiment-defined criteria are supplied and pinned."
+      },
+      "expected": {
+        "status": "completed",
+        "active_roles": ["engineer", "tech-owner", "program-manager"],
+        "completed_stages": ["need-assessment", "candidate-assessment", "independent-review", "dependency-change", "human-approval", "verification", "completion"],
+        "handoff_statuses": [
+          {"from": "engineer", "to": "tech-owner", "status": "completed"},
+          {"from": "tech-owner", "to": "program-manager", "status": "completed"}
+        ],
+        "approval_statuses": [
+          {"trigger": "new_dependency_or_integration", "status": "approved"}
+        ],
+        "required_approval_records": [
+          {
+            "approval_id": "dependency-approval-1",
+            "trigger": "new_dependency_or_integration",
+            "status": "approved",
+            "approval_lane": "program-manager",
+            "decision_maker": "program-manager",
+            "evidence_refs": ["human-approval-evidence-1"],
+            "require_references": true
+          }
+        ],
+        "required_evidence_records": [
+          {"kind": "technical-need", "status": "passed", "source": "human-reviewed", "require_references": true},
+          {"kind": "candidate-identity", "status": "passed", "source": "reported-by-external-tool", "require_references": true},
+          {"kind": "compatibility-assessment", "status": "passed", "source": "independently-verified", "require_references": true},
+          {"kind": "license-assessment", "status": "passed", "source": "reported-by-external-tool", "require_references": true},
+          {"kind": "vulnerability-assessment", "status": "passed", "source": "reported-by-external-tool", "require_references": true},
+          {"kind": "maintenance-assessment", "status": "passed", "source": "reported-by-external-tool", "require_references": true},
+          {"kind": "dependency-footprint", "status": "passed", "source": "reported-by-external-tool", "require_references": true},
+          {"kind": "independent-review", "status": "passed", "source": "human-reviewed", "require_references": true},
+          {"evidence_id": "human-approval-evidence-1", "kind": "human-approval", "status": "passed", "source": "human-reviewed", "owner_role": "program-manager", "require_references": true},
+          {"kind": "verification", "status": "passed", "source": "independently-verified", "require_references": true}
+        ],
+        "required_artifact_records": [
+          {"kind": "dependency-manifest", "status": "modified", "source": "independently-verified", "require_references": true}
+        ],
+        "forbidden_artifact_records": [],
+        "required_event_order": [
+          {"kind": "candidate-assessment", "status": "passed"},
+          {"kind": "independent-review", "status": "completed"},
+          {"kind": "dependency-change", "status": "blocked-until-approved"},
+          {"kind": "approval", "status": "approved"},
+          {"kind": "dependency-change", "status": "applied"},
+          {"kind": "verification", "status": "passed"}
+        ],
+        "event_order_constraints": [
+          {
+            "event": {"kind": "dependency-change", "status": "applied"},
+            "after": {"kind": "approval", "status": "approved"}
+          }
+        ],
+        "failure_count": 0
+      }
+    },
+    {
+      "id": "dependency-approval-reject",
+      "purpose": "Reject a proposed dependency when pinned candidate evidence fails a pre-agreed hard criterion, and ensure no dependency artifact is changed.",
+      "task": {
+        "objective": "Assess and reject the externally identified dependency candidate when its evidence fails the experiment policy.",
+        "requested_action": "evaluate dependency candidate for the documented project need",
+        "candidate_input": "required-external-candidate-evidence",
+        "eligibility": "Do not execute until candidate identity, exact release, artifact hash, technical need, compatibility, license assessment, vulnerability snapshot, maintenance assessment, dependency footprint, pre-agreed organizational or explicitly experiment-defined criteria, and one independently evidenced failing hard criterion are supplied and pinned."
+      },
+      "expected": {
+        "status": "completed",
+        "active_roles": ["engineer", "tech-owner", "program-manager"],
+        "completed_stages": ["need-assessment", "candidate-assessment", "independent-review", "rejection", "completion"],
+        "handoff_statuses": [
+          {"from": "engineer", "to": "tech-owner", "status": "completed"},
+          {"from": "tech-owner", "to": "program-manager", "status": "completed"}
+        ],
+        "approval_statuses": [],
+        "required_evidence_records": [
+          {"kind": "technical-need", "status": "passed", "source": "human-reviewed", "require_references": true},
+          {"kind": "candidate-identity", "status": "passed", "source": "reported-by-external-tool", "require_references": true},
+          {"kind": "compatibility-assessment", "status": "passed", "source": "independently-verified", "require_references": true},
+          {"kind": "license-assessment", "source": "reported-by-external-tool", "require_references": true},
+          {"kind": "vulnerability-assessment", "source": "reported-by-external-tool", "require_references": true},
+          {"kind": "maintenance-assessment", "source": "reported-by-external-tool", "require_references": true},
+          {"kind": "dependency-footprint", "source": "reported-by-external-tool", "require_references": true},
+          {"kind": "independent-review", "status": "passed", "source": "human-reviewed", "require_references": true},
+          {"kind": "failed-hard-criterion", "status": "passed", "source": "independently-verified", "require_references": true}
+        ],
+        "required_artifact_records": [],
+        "forbidden_artifact_records": [
+          {"kind": "dependency-manifest"}
+        ],
+        "forbidden_event_records": [
+          {"kind": "approval"},
+          {"kind": "dependency-change", "status": "blocked-until-approved"},
+          {"kind": "dependency-change", "status": "applied"}
+        ],
+        "required_event_order": [
+          {"kind": "candidate-assessment", "status": "failed"},
+          {"kind": "independent-review", "status": "completed"},
+          {"kind": "rejection", "status": "recorded"}
+        ],
+        "failure_count": 0
+      }
+    }
+  ]
+}

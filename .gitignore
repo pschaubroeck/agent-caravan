@@ -1,0 +1,31 @@
+__pycache__/
+*.py[cod]
+.DS_Store
+
+# Local Python environments and tooling caches.
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Build and distribution output.
+build/
+dist/
+*.egg-info/
+
+# Local credentials and environment overrides.
+.env
+.env.*
+!.env.example
+
+# Local implementation state belongs outside this repository.
+.agents/
+!examples/codex-plugins/.agents/
+!examples/codex-plugins/.agents/plugins/
+!examples/codex-plugins/.agents/plugins/marketplace.json
+
+# Generated resolver output.
+*.resolved.json

@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "agentfoundry/runtime-profile.schema.json",
+  "title": "Runtime profile",
+  "allOf": [
+    {"$ref": "portable-artifact-identity.schema.json"},
+    {"properties": {"artifact_type": {"const": "runtime-profile"}, "target_adapter_id": {"type": "string", "minLength": 1}, "target_team_blueprint_id": {"type": "string", "minLength": 1}, "required_capabilities": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true}, "preferred_capabilities": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true}, "capability_support_requirements": {"type": "object", "additionalProperties": {"enum": ["native", "adapted", "externalized", "unsupported"]}}, "execution": {"type": "object"}}, "required": ["target_adapter_id"]}
+  ]
+}

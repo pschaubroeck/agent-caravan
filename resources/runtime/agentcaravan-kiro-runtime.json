@@ -1,0 +1,124 @@
+{
+  "artifacts": [
+    {
+      "artifact_type": "runtime-adapter",
+      "id": "kiro-ide-agent-runtime",
+      "version": "1.0.0",
+      "scope": "shared",
+      "name": "Kiro IDE Agent Runtime",
+      "capabilities": {
+        "interactive_execution": "native",
+        "stepwise_execution": "native",
+        "streaming_output": "native",
+        "background_execution": "adapted",
+        "long_running_execution": "adapted",
+        "checkpoint_resume": "adapted",
+        "role_handoff": "adapted",
+        "subagent_delegation": "native",
+        "parallel_lane_execution": "native",
+        "supervisor_worker_pattern": "adapted",
+        "explicit_escalation": "native",
+        "local_command_execution": "native",
+        "api_call_execution": "adapted",
+        "browser_interaction": "adapted",
+        "document_editing": "native",
+        "code_editing": "native",
+        "tool_result_structuring": "adapted",
+        "tool_permission_scoping": "native",
+        "context_window_only": "native",
+        "document_attachment_support": "native",
+        "dynamic_context_loading": "native",
+        "knowledge_source_registration": "adapted",
+        "retrieval_augmented_context": "adapted",
+        "structured_memory_store": "externalized",
+        "session_state": "native",
+        "ephemeral_memory": "native",
+        "durable_memory": "adapted",
+        "cross_run_context_persistence": "adapted",
+        "workflow_state_graph": "externalized",
+        "tool_approval_gates": "native",
+        "human_confirmation_points": "native",
+        "permission_profiles": "native",
+        "write_restrictions": "native",
+        "network_restrictions": "adapted",
+        "environment_isolation": "externalized",
+        "execution_trace": "adapted",
+        "step_logging": "adapted",
+        "tool_call_audit": "adapted",
+        "handoff_traceability": "adapted",
+        "run_metadata": "adapted",
+        "reasoning_effort_telemetry": "externalized",
+        "structured_output_contracts": "adapted",
+        "schema_validated_io": "adapted",
+        "policy_enforced_routing": "adapted",
+        "deterministic_flow_nodes": "adapted",
+        "state_machine_orchestration": "externalized"
+      },
+      "repository_guidance": {
+        "native_files": ["AGENTS.md", ".kiro/steering/**/*.md"],
+        "discovery": "automatic",
+        "reference_policy": "follow-explicit-links"
+      },
+      "observability_model": {
+        "association": "metadata.observability",
+        "constraints": [
+          "operator-visible activity is not a complete machine-readable execution trace",
+          "worker, approval, and effective model evidence must be attributed by the runtime or operator",
+          "optional collection and export remain runtime-owned; no Agent Caravan emitter is provided"
+        ]
+      }
+    },
+    {
+      "artifact_type": "runtime-profile",
+      "id": "kiro-ide-information-technology-core-team",
+      "version": "1.0.0",
+      "scope": "shared",
+      "target_adapter_id": "kiro-ide-agent-runtime",
+      "target_team_blueprint_id": "information-technology-core-team",
+      "required_capabilities": [
+        "structured_output_contracts",
+        "dynamic_context_loading",
+        "local_command_execution",
+        "code_editing",
+        "tool_approval_gates",
+        "role_handoff"
+      ],
+      "preferred_capabilities": [
+        "execution_trace",
+        "tool_permission_scoping",
+        "reasoning_effort_control",
+        "parallel_lane_execution"
+      ],
+      "capability_support_requirements": {
+        "subagent_delegation": "native"
+      },
+      "execution_profile_ids": [
+        "information-technology-core-team-basic-work",
+        "information-technology-core-team-feature-delivery"
+      ],
+      "execution": {
+        "observability": {"enabled": false, "export": "local", "capture_content": false},
+        "model_profile": "kiro-operator-selected",
+        "instructions": "Use the selected Agent Caravan execution profile. Preserve role, handoff, approval, and termination boundaries. Record only operator-observed Kiro evidence.",
+        "workspace": {"mode": "current-repository"},
+        "output_schema": "agentfoundry-task-completion",
+        "guardrails": ["tool-approval-gates", "structured-handoffs"],
+        "persistence": "task-record-and-session-state",
+        "limits": {"max_review_resolution_iterations": 3}
+      },
+      "execution_projection": {
+        "workflow_construct": "primary Kiro IDE agent following explicit Agent Caravan stages",
+        "role_construct": "Kiro custom agents and subagents for authorized role lanes",
+        "handoff_construct": "structured Agent Caravan handoff record linked to attributable Kiro worker references when available",
+        "state_construct": "Agent Caravan task, session, and run records linked to operator-visible Kiro session state",
+        "approval_construct": "interactive Kiro permission prompt with recorded actor, scope, and decision",
+        "degraded_behavior": "use a declared serial fallback when worker attribution or parallel evidence is unavailable; block actions requiring unverified approval"
+      },
+      "fallback_rules": [
+        "run authorized optional parallel lanes serially when distinct worker references or overlap timing cannot be proved",
+        "require explicit task summaries when durable memory is unavailable",
+        "block approval-dependent actions when an attributed human decision is unavailable"
+      ]
+    }
+  ]
+}

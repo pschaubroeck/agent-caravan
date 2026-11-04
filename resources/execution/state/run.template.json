@@ -1,0 +1,16 @@
+{
+  "run_id": "<run-id>",
+  "session_id": "<session-id>",
+  "task_id": "<task-id>",
+  "execution_profile_id": "<execution-profile-id>",
+  "runtime_adapter_id": "<runtime-adapter-id>",
+  "runtime_profile_id": "<runtime-profile-id>",
+  "status": "active",
+  "started_at": "<timestamp>",
+  "ended_at": null,
+  "attempt": 1,
+  "events": [],
+  "checkpoints": [],
+  "idempotency_records": [],
+  "metrics": {}
+}

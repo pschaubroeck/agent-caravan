@@ -1,0 +1,4 @@
+interface:
+  display_name: "Agent Caravan Framework Resolver"
+  short_description: "Resolve effective AI team configurations"
+  default_prompt: "Use $agent-caravan-resolver to resolve an AI organization framework configuration."

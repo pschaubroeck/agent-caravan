@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "agentfoundry/run-record.schema.json",
+  "title": "Agent Caravan Run Record",
+  "type": "object",
+  "required": ["run_id", "session_id", "task_id", "execution_profile_id", "status", "started_at"],
+  "properties": {
+    "run_id": {"type": "string", "minLength": 1},
+    "session_id": {"type": "string", "minLength": 1},
+    "task_id": {"type": "string", "minLength": 1},
+    "execution_profile_id": {"type": "string", "minLength": 1},
+    "runtime_adapter_id": {"type": "string"},
+    "runtime_profile_id": {"type": "string"},
+    "status": {"type": "string", "enum": ["active", "interrupted", "completed", "failed", "cancelled", "degraded"]},
+    "started_at": {"type": "string"},
+    "ended_at": {"type": ["string", "null"]},
+    "attempt": {"type": "integer", "minimum": 1},
+    "events": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {"$ref": "execution-contracts.schema.json#/$defs/agentFoundryEvent"},
+          {"$ref": "execution-contracts.schema.json#/$defs/executionEvent"}
+        ]
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {"$ref": "execution-contracts.schema.json#/$defs/evidence"}
+    },
+    "checkpoints": {
+      "type": "array",
+      "items": {"$ref": "execution-contracts.schema.json#/$defs/checkpoint"}
+    },
+    "idempotency_records": {
+      "type": "array",
+      "items": {"$ref": "execution-contracts.schema.json#/$defs/idempotencyRecord"}
+    },
+    "metadata": {"$ref": "execution-contracts.schema.json#/$defs/executionMetadata"},
+    "metrics": {"type": "object"},
+    "topology_conformance": {"type": "object"},
+    "execution_events": {"type": "array", "items": {"$ref": "execution-contracts.schema.json#/$defs/executionEvent"}},
+    "scheduling_conformance": {"type": "object"},
+    "execution_diagnostics": {"type": "object"}
+  },
+  "additionalProperties": true
+}

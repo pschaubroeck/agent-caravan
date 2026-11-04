@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "agentfoundry/documentation-reference.schema.json",
+  "title": "Artifact documentation reference",
+  "description": "A reference to supplemental documentation. It is metadata, not an instruction to retrieve the document.",
+  "type": "object",
+  "required": ["uri"],
+  "properties": {
+    "uri": {"type": "string", "minLength": 1},
+    "media_type": {"type": "string", "minLength": 1},
+    "title": {"type": "string", "minLength": 1},
+    "purpose": {"type": "string", "minLength": 1}
+  },
+  "additionalProperties": false
+}

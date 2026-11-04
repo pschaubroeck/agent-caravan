@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "agentfoundry/runtime-adapter.schema.json",
+  "title": "Runtime adapter declaration",
+  "allOf": [
+    {"$ref": "portable-artifact-identity.schema.json"},
+    {"properties": {"artifact_type": {"const": "runtime-adapter"}, "capabilities": {"type": "object", "additionalProperties": {"enum": ["native", "adapted", "externalized", "unsupported"]}}, "observability_model": {"type": "object"}}, "required": ["capabilities"]}
+  ]
+}

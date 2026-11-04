@@ -1,0 +1,5 @@
+[documentation]
+docs_root = "docs"
+
+[documentation.vale]
+mode = "global"

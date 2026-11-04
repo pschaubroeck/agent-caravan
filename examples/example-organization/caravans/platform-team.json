@@ -1,0 +1,25 @@
+{
+  "artifact_type": "team-instance",
+  "id": "example-organization-platform-team",
+  "version": "1.0.0",
+  "scope": "organization",
+  "name": "Platform Team",
+  "organization_catalog_id": "example-organization",
+  "team_blueprint_id": "information-technology-core-team",
+  "ownership_boundary": {
+    "summary": "Shared internal platform capabilities",
+    "owned_surfaces": [
+      "platform services and shared libraries",
+      "developer tooling and automation",
+      "platform documentation and operating guidance"
+    ],
+    "out_of_scope": [
+      "product-specific application features owned by other teams",
+      "organization-wide policy decisions not delegated to this team"
+    ]
+  },
+  "role_overlays": [],
+  "domain_packs": [],
+  "specialization_packs": [],
+  "runtime_defaults": []
+}

@@ -1,0 +1,226 @@
+{
+  "input_version": "1.0.0",
+  "experiment_id": "dependency-approval",
+  "collected_on": "2026-09-29",
+  "criteria": {
+    "criteria_id": "agentfoundry-json-schema-validation-2026-09-29",
+    "scope": "experiment-defined; not organization policy",
+    "project_need": "Validate framework instances against the repository's JSON Schema contracts using Draft 2020-12, resolve local sibling-file references without remote fetches, and support the project's Python >=3.10 range.",
+    "hard_requirements": [
+      {
+        "id": "draft-2020-12",
+        "requirement": "Directly validates JSON Schema Draft 2020-12 documents and instances."
+      },
+      {
+        "id": "local-sibling-refs",
+        "requirement": "Resolves local sibling-file $ref values without fetching schemas remotely."
+      },
+      {
+        "id": "python-compatibility",
+        "requirement": "Supports Python >=3.10."
+      },
+      {
+        "id": "license",
+        "requirement": "License is MIT, BSD, or Apache-2.0."
+      },
+      {
+        "id": "published-advisories",
+        "requirement": "The exact-version PyPI vulnerability listing and maintainer advisory page show no published High/Critical item. An empty listing is not proof of safety."
+      },
+      {
+        "id": "maintenance",
+        "requirement": "A stable release was published within 24 months before evidence collection."
+      },
+      {
+        "id": "base-dependency-footprint",
+        "requirement": "At most five base runtime dependencies, excluding optional extras."
+      }
+    ],
+    "prohibited_behavior": [
+      "Remote schema retrieval during validation."
+    ],
+    "repository_need_evidence": {
+      "schema_count": 10,
+      "schema_dialect": "https://json-schema.org/draft/2020-12/schema",
+      "cross_file_reference_target": "execution-contracts.schema.json",
+      "repository_python_requirement": ">=3.10",
+      "source": "independently-verified",
+      "references": [
+        "resources/schemas/",
+        "pyproject.toml"
+      ],
+      "collected_on": "2026-09-29"
+    }
+  },
+  "candidates": [
+    {
+      "case_id": "dependency-approval-accept",
+      "expected_disposition": "accept",
+      "name": "jsonschema",
+      "version": "4.26.0",
+      "artifact": {
+        "filename": "jsonschema-4.26.0-py3-none-any.whl",
+        "sha256": "d489f15263b8d200f8387e64b4c3a75f06629559fb73deb8fdfb525f2dab50ce"
+      },
+      "evidence": [
+        {
+          "evidence_id": "jsonschema-identity-1",
+          "claim": "Exact release, artifact, Python requirement, license expression, and base requirements.",
+          "source": "reported-by-external-tool",
+          "collector": "PyPI JSON API and downloaded wheel metadata",
+          "collected_on": "2026-09-29",
+          "verification_status": "independently-verified",
+          "references": [
+            "https://pypi.org/pypi/jsonschema/4.26.0/json",
+            "https://pypi.org/project/jsonschema/4.26.0/"
+          ],
+          "findings": {
+            "release_date": "2026-01-07",
+            "yanked": false,
+            "requires_python": ">=3.10",
+            "license": "MIT",
+            "base_runtime_dependencies": [
+              "attrs",
+              "jsonschema-specifications",
+              "referencing",
+              "rpds-py"
+            ],
+            "base_runtime_dependency_count": 4,
+            "optional_extras_excluded": true
+          }
+        },
+        {
+          "evidence_id": "jsonschema-dialect-1",
+          "claim": "The package supports Draft 2020-12 and can use a local registry for references.",
+          "source": "reported-by-external-tool",
+          "collector": "Official project documentation",
+          "collected_on": "2026-09-29",
+          "verification_status": "independently-verified",
+          "references": [
+            "https://python-jsonschema.readthedocs.io/en/stable/",
+            "https://python-jsonschema.readthedocs.io/en/stable/referencing/"
+          ]
+        },
+        {
+          "evidence_id": "jsonschema-advisories-1",
+          "claim": "No High/Critical item was listed for this exact version by the queried package and maintainer sources.",
+          "source": "reported-by-external-tool",
+          "collector": "PyPI exact-version vulnerability field and maintainer GitHub security page",
+          "collected_on": "2026-09-29",
+          "verification_status": "independently-verified-with-source-limits",
+          "references": [
+            "https://pypi.org/pypi/jsonschema/4.26.0/json",
+            "https://github.com/python-jsonschema/jsonschema/security/advisories"
+          ],
+          "limitation": "An empty listing is not proof of safety and does not cover every advisory database."
+        },
+        {
+          "evidence_id": "jsonschema-runtime-1",
+          "claim": "The installed exact version validated the repository's Draft 2020-12 schemas and local sibling references without remote retrieval.",
+          "source": "directly-observed-by-agentcaravan",
+          "collector": "Disposable-checkout runtime harness",
+          "collected_on": "2026-09-29",
+          "verification_status": "independently-verified",
+          "references": [
+            "resources/schemas/",
+            "pyproject.toml"
+          ],
+          "findings": {
+            "schema_count_validated": 10,
+            "valid_referenced_instance": "accepted",
+            "invalid_referenced_instance": "rejected",
+            "remote_retrieval_attempts": 0
+          }
+        }
+      ],
+      "criterion_results": {
+        "draft-2020-12": "passed",
+        "local-sibling-refs": "passed",
+        "python-compatibility": "passed",
+        "license": "passed",
+        "published-advisories": "passed-with-source-limits",
+        "maintenance": "passed",
+        "base-dependency-footprint": "passed"
+      }
+    },
+    {
+      "case_id": "dependency-approval-reject",
+      "expected_disposition": "reject",
+      "name": "fastjsonschema",
+      "version": "2.22.2",
+      "artifact": {
+        "filename": "fastjsonschema-2.22.2-py3-none-any.whl",
+        "sha256": "0fb3915616adac85ccfdd737d26be1089845d2019819505b42d39888458f74d4"
+      },
+      "evidence": [
+        {
+          "evidence_id": "fastjsonschema-identity-1",
+          "claim": "Exact release, artifact, Python requirement, license, and runtime dependency footprint.",
+          "source": "reported-by-external-tool",
+          "collector": "PyPI JSON API and project documentation",
+          "collected_on": "2026-09-29",
+          "verification_status": "independently-verified",
+          "references": [
+            "https://pypi.org/pypi/fastjsonschema/2.22.2/json",
+            "https://pypi.org/project/fastjsonschema/2.22.2/"
+          ],
+          "findings": {
+            "release_date": "2026-08-15",
+            "yanked": false,
+            "requires_python": ">=3.10",
+            "license": "BSD-3-Clause",
+            "base_runtime_dependency_count": 0,
+            "devel_extra_dependencies_excluded": true
+          }
+        },
+        {
+          "evidence_id": "fastjsonschema-dialect-1",
+          "claim": "The candidate supports Draft-04, Draft-06, and Draft-07, but not the repository's required Draft 2020-12 dialect.",
+          "source": "reported-by-external-tool",
+          "collector": "Official project documentation",
+          "collected_on": "2026-09-29",
+          "verification_status": "independently-verified",
+          "references": [
+            "https://horejsek.github.io/python-fastjsonschema/"
+          ],
+          "failed_criterion": "draft-2020-12"
+        },
+        {
+          "evidence_id": "fastjsonschema-advisories-1",
+          "claim": "No High/Critical item was listed for this exact version by the queried package and maintainer sources.",
+          "source": "reported-by-external-tool",
+          "collector": "PyPI exact-version vulnerability field and maintainer GitHub security page",
+          "collected_on": "2026-09-29",
+          "verification_status": "independently-verified-with-source-limits",
+          "references": [
+            "https://pypi.org/pypi/fastjsonschema/2.22.2/json",
+            "https://github.com/horejsek/python-fastjsonschema/security/advisories"
+          ],
+          "limitation": "An empty listing is not proof of safety; an exact OSV query was unavailable due a local TLS verification failure."
+        }
+      ],
+      "criterion_results": {
+        "draft-2020-12": "failed",
+        "local-sibling-refs": "not-applicable-after-dialect-failure",
+        "python-compatibility": "passed",
+        "license": "passed",
+        "published-advisories": "passed-with-source-limits",
+        "maintenance": "passed",
+        "base-dependency-footprint": "passed"
+      },
+      "installation_prohibited": true
+    }
+  ],
+  "approval": {
+    "candidate": "jsonschema==4.26.0",
+    "decision": "approved",
+    "decision_source": "human-reviewed",
+    "decision_record": "User explicitly approved jsonschema in the Codex conversation after candidate evidence and independent Tech Owner review.",
+    "decision_date": "2026-09-29"
+  },
+  "scope_limitations": [
+    "These criteria are experiment-defined and are not organization policy.",
+    "The queried package and maintainer advisory sources do not prove absence of vulnerabilities.",
+    "The two candidates test this repository-specific Draft 2020-12 need; they do not define universal dependency policy."
+  ]
+}

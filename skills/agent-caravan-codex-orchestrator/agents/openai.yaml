@@ -1,0 +1,4 @@
+interface:
+  display_name: "Agent Caravan Implementation Orchestrator"
+  short_description: "Implement work through an active Agent Caravan team"
+  default_prompt: "Use $agent-caravan-codex-orchestrator to inspect the active team and repository guidance, explain role participation, implement a bounded change through the appropriate roles, run focused tests, and report evidence and unverified conditions."

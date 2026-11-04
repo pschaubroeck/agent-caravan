@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "agentfoundry/task-handoff.schema.json",
+  "title": "Agent Caravan Task Handoff",
+  "description": "A complete task-scoped execution handoff. It is distinct from a lightweight role handoff and must use artifact_type=task-handoff.",
+  "type": "object",
+  "required": ["artifact_type", "version", "handoff_id", "task_id", "plan_id", "selected_context", "role_assignments", "execution_topology", "capability_requirements", "sender_role", "receiver_role", "objective", "requested_action", "inputs", "expected_outputs", "next_action", "validation", "evidence", "approvals", "unresolved_questions", "blockers", "status"],
+  "properties": {
+    "artifact_type": {"const": "task-handoff"},
+    "version": {"type": "string", "minLength": 1},
+    "handoff_id": {"type": "string", "minLength": 1},
+    "task_id": {"type": "string", "minLength": 1},
+    "plan_id": {"type": "string", "minLength": 1},
+    "selected_context": {"type": "object"},
+    "role_assignments": {"type": "array"},
+    "execution_topology": {"type": "object"},
+    "capability_requirements": {"type": "object"},
+    "sender_role": {"type": "string", "minLength": 1},
+    "receiver_role": {"type": "string", "minLength": 1},
+    "objective": {"type": "string", "minLength": 1},
+    "requested_action": {"type": "string", "minLength": 1},
+    "inputs": {"type": "array"},
+    "expected_outputs": {"type": "array"},
+    "next_action": {"type": "string", "minLength": 1},
+    "validation": {"type": "object"},
+    "evidence": {"type": "array"},
+    "approvals": {"type": "array"},
+    "unresolved_questions": {"type": "array"},
+    "blockers": {"type": "array"},
+    "status": {"enum": ["draft", "ready", "accepted", "blocked", "completed", "rejected"]}
+  },
+  "additionalProperties": false
+}

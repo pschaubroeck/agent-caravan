@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "agentfoundry/organization-catalog.schema.json",
+  "title": "Organization catalog",
+  "allOf": [
+    {"$ref": "portable-artifact-identity.schema.json"},
+    {"properties": {"artifact_type": {"const": "organization-catalog"}, "published_artifacts": {"type": "object", "propertyNames": {"pattern": "^[a-z][a-z0-9-]*$"}, "additionalProperties": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true}}}, "required": ["published_artifacts"]}
+  ]
+}

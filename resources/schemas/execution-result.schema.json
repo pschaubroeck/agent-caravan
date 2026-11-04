@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "agentfoundry/execution-result.schema.json",
+  "title": "Agent Caravan Normalized Execution Result",
+  "$ref": "execution-contracts.schema.json#/$defs/normalizedExecutionResult"
+}

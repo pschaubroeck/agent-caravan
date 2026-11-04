@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "agentfoundry/team-instance.schema.json",
+  "title": "Team instance",
+  "allOf": [
+    {"$ref": "portable-artifact-identity.schema.json"},
+    {"properties": {"artifact_type": {"const": "team-instance"}, "organization_catalog_id": {"type": "string", "minLength": 1}, "team_blueprint_id": {"type": "string", "minLength": 1}, "role_overlays": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true}, "domain_packs": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true}, "specialization_packs": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true}, "runtime_defaults": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true}}, "required": ["organization_catalog_id", "team_blueprint_id"]}
+  ]
+}

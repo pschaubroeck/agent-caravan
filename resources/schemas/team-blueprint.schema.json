@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "agentfoundry/team-blueprint.schema.json",
+  "title": "Team blueprint",
+  "allOf": [
+    {"$ref": "portable-artifact-identity.schema.json"},
+    {"properties": {"artifact_type": {"const": "team-blueprint"}, "core_roles": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}, "uniqueItems": true}, "optional_roles": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true}, "mandatory_debates": {"type": "array", "items": {"type": "string", "minLength": 1}}, "debate_participants": {"type": "object", "additionalProperties": {"type": "array", "items": {"type": "string", "minLength": 1}}}, "blocking_lanes": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true}, "coverage_requirements": {"type": "object", "additionalProperties": {"type": "array", "items": {"type": "string", "minLength": 1}}}}, "required": ["core_roles"]}
+  ]
+}

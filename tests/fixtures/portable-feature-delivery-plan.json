@@ -1,0 +1,87 @@
+{
+  "artifact_type": "portable-execution-plan",
+  "id": "example-feature-execution-plan",
+  "version": "1.0.0",
+  "scope": "task",
+  "task": {
+    "task_id": "example-feature",
+    "objective": "Deliver a small product feature"
+  },
+  "context": {
+    "organization_catalog_id": "example-organization",
+    "team_instance_id": "example-team",
+    "team_blueprint_id": "information-technology-core-team",
+    "workflow_id": "feature-delivery"
+  },
+  "role_assignments": [
+    {"role_id": "tech-owner", "participation": "entry", "source_chain": ["tech-owner"]},
+    {"role_id": "engineer", "participation": "primary", "source_chain": ["engineer"]},
+    {"role_id": "quality-engineer", "participation": "supporting", "source_chain": ["quality-engineer"]},
+    {"role_id": "software-architect", "participation": "reviewer", "source_chain": ["software-architect"]}
+  ],
+  "steps": [
+    {
+      "step_id": "technical-breakdown",
+      "kind": "task",
+      "role_ids": ["tech-owner", "software-architect", "quality-engineer"],
+      "mode": "sequential",
+      "condition": null,
+      "expected_outputs": ["implementation and testability direction"]
+    },
+    {
+      "step_id": "implementation",
+      "kind": "task",
+      "role_ids": ["engineer"],
+      "mode": "handoff",
+      "condition": null,
+      "expected_outputs": ["working code and tests"]
+    },
+    {
+      "step_id": "quality-review",
+      "kind": "task",
+      "role_ids": ["quality-engineer", "software-architect"],
+      "mode": "sequential",
+      "condition": null,
+      "expected_outputs": ["validation evidence"]
+    }
+  ],
+  "communication": {
+    "requires_structured_handoff": true,
+    "handoff_semantics": "mixed",
+    "allowed_role_handoffs": [
+      {"from": "tech-owner", "to": "engineer", "purpose": "implementation breakdown", "ownership": "explicit-ownership-transfer"}
+    ]
+  },
+  "policy": {
+    "policy_ids": ["example-safety-policy"],
+    "approval_requirements": ["remote mutation", "release or deployment"]
+  },
+  "capability_requirements": {
+    "required": ["structured handoff", "approval gating"],
+    "preferred": ["durable execution evidence"]
+  },
+  "execution_topology": {
+    "mode": "sequential",
+    "task_ownership": "caller-retains",
+    "handoff_semantics": "mixed",
+    "serial_fallback": null
+  },
+  "tool_requirements": [
+    {
+      "id": "repository-inspection",
+      "side_effect_class": "read-only",
+      "permission_boundary": "selected repository",
+      "approval_required": false,
+      "evidence_kinds": ["tool-request", "tool-result"]
+    }
+  ],
+  "evidence_requirements": [
+    {"kind": "handoff-record", "required": true, "owner_role": "tech-owner", "stage_id": "implementation"},
+    {"kind": "completion-record", "required": true, "owner_role": null, "stage_id": null}
+  ],
+  "termination": {
+    "success_conditions": ["working code and tests exist"],
+    "failure_conditions": ["required role coverage cannot be activated"]
+  },
+  "required_outputs": ["task record", "handoff records", "completion record"]
+}

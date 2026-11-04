@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "agentfoundry/handoff.schema.json",
+  "title": "Agent Caravan Role Handoff",
+  "description": "A lightweight transfer of bounded work between roles. New role handoffs should identify themselves with artifact_type=role-handoff; omission remains valid for legacy role handoffs.",
+  "type": "object",
+  "required": ["handoff_id", "task_id", "sender_role", "receiver_role", "objective", "requested_action", "inputs", "expected_outputs", "validation", "status"],
+  "properties": {
+    "artifact_type": {"const": "role-handoff", "description": "Optional compatibility discriminator for a role handoff. Omit only for legacy records."},
+    "handoff_id": {"type": "string", "minLength": 1},
+    "task_id": {"type": "string", "minLength": 1},
+    "plan_id": {"type": "string", "minLength": 1},
+    "sender_role": {"type": "string", "minLength": 1},
+    "receiver_role": {"type": "string", "minLength": 1},
+    "objective": {"type": "string", "minLength": 1},
+    "requested_action": {"type": "string", "minLength": 1},
+    "inputs": {"type": "array"},
+    "expected_outputs": {"type": "array"},
+    "evidence": {
+      "type": "array",
+      "items": {"$ref": "execution-contracts.schema.json#/$defs/evidence"}
+    },
+    "approvals": {
+      "type": "array",
+      "items": {"$ref": "execution-contracts.schema.json#/$defs/approval"}
+    },
+    "validation": {"type": "object"},
+    "status": {"type": "string", "enum": ["draft", "ready", "accepted", "blocked", "completed", "rejected"]}
+  },
+  "additionalProperties": true
+}

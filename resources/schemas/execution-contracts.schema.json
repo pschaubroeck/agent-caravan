@@ -1,0 +1,506 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "agentfoundry/execution-contracts.schema.json",
+  "title": "Agent Caravan Portable Execution Contracts",
+  "$defs": {
+    "successCriterion": {
+      "type": "object",
+      "required": ["id", "description", "assessor_roles"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "description": {"type": "string", "minLength": 1},
+        "assessor_roles": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+      },
+      "additionalProperties": false
+    },
+    "termination": {
+      "type": "object",
+      "properties": {
+        "success_conditions": {"type": "array", "items": {"type": "string"}},
+        "success_criteria": {"type": "array", "items": {"$ref": "#/$defs/successCriterion"}},
+        "failure_conditions": {"type": "array", "items": {"type": "string"}},
+        "unresolved_conditions": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": true
+    },
+    "workflowAssessmentCriterion": {
+      "type": "object",
+      "required": ["criterion_id", "status", "assessor_role_id", "rationale", "evidence_refs"],
+      "properties": {
+        "criterion_id": {"type": "string", "minLength": 1},
+        "status": {"type": "string", "enum": ["met", "not-met", "unverified", "not-applicable"]},
+        "assessor_role_id": {"type": ["string", "null"]},
+        "rationale": {"type": "string", "minLength": 1},
+        "evidence_refs": {"type": "array", "items": {"type": "string", "minLength": 1}}
+      },
+      "additionalProperties": false
+    },
+    "workflowAssessment": {
+      "type": "object",
+      "required": ["artifact_type", "version", "status", "task_id", "plan_id", "workflow_id", "criteria"],
+      "properties": {
+        "artifact_type": {"const": "workflow-assessment"},
+        "version": {"type": "string", "minLength": 1},
+        "status": {"type": "string", "enum": ["met", "not-met", "unverified", "not-applicable"]},
+        "task_id": {"type": "string", "minLength": 1},
+        "plan_id": {"type": "string", "minLength": 1},
+        "workflow_id": {"type": "string", "minLength": 1},
+        "session_id": {"type": "string", "minLength": 1},
+        "run_id": {"type": "string", "minLength": 1},
+        "criteria": {"type": "array", "items": {"$ref": "#/$defs/workflowAssessmentCriterion"}}
+      },
+      "additionalProperties": false
+    },
+    "observabilityAssociation": {
+      "type": "object",
+      "description": "Optional runtime-owned telemetry associations; never semantic execution proof or an instruction to fetch references.",
+      "properties": {
+        "references": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "correlation": {
+          "type": "object",
+          "properties": {
+            "task_id": {"type": "string", "minLength": 1},
+            "session_id": {"type": "string", "minLength": 1},
+            "run_id": {"type": "string", "minLength": 1},
+            "plan_id": {"type": "string", "minLength": 1},
+            "role_id": {"type": "string", "minLength": 1},
+            "stage_id": {"type": "string", "minLength": 1},
+            "execution_profile_id": {"type": "string", "minLength": 1},
+            "runtime_profile_id": {"type": "string", "minLength": 1},
+            "runtime_adapter_id": {"type": "string", "minLength": 1}
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "executionMetadata": {
+      "type": "object",
+      "properties": {"observability": {"$ref": "#/$defs/observabilityAssociation"}},
+      "additionalProperties": true
+    },
+    "executionTopology": {
+      "type": "object",
+      "required": ["mode"],
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": [
+            "sequential",
+            "parallel",
+            "handoff",
+            "loop",
+            "coordinator",
+            "coordinator-worker",
+            "graph",
+            "group-chat",
+            "concurrent-fanout",
+            "human-gated",
+            "remote-agent"
+          ]
+        },
+        "task_ownership": {
+          "type": "string",
+          "enum": ["caller-retains", "receiver-takes-over", "code-controlled", "model-routed-within-boundary"]
+        },
+        "handoff_semantics": {
+          "type": "string",
+          "enum": ["explicit-ownership-transfer", "caller-retains", "mixed"]
+        },
+        "supported_modes": {"type": "array", "items": {"type": "string"}},
+        "parallel_lanes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "stage_id", "role_ids", "purpose"],
+            "properties": {
+              "id": {"type": "string", "minLength": 1},
+              "stage_id": {"type": "string", "minLength": 1},
+              "role_ids": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+              "purpose": {"type": "string", "minLength": 1},
+              "condition": {"type": "string", "minLength": 1}
+            },
+            "additionalProperties": false
+          }
+        },
+        "work_items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "stage_id", "role_id", "purpose"],
+            "properties": {
+              "id": {"type": "string", "minLength": 1},
+              "stage_id": {"type": "string", "minLength": 1},
+              "role_id": {"type": "string", "minLength": 1},
+              "purpose": {"type": "string", "minLength": 1},
+              "depends_on": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+              "condition": {"type": "string", "minLength": 1},
+              "lane_id": {"type": "string", "minLength": 1}
+            },
+            "additionalProperties": false
+          }
+        },
+        "serial_fallback": {
+          "anyOf": [
+            {"type": "string"},
+            {
+              "type": "object",
+              "required": ["mode", "lane_ids"],
+              "properties": {"mode": {"const": "run-in-order"}, "lane_ids": {"type": "array", "items": {"type": "string", "minLength": 1}}},
+              "additionalProperties": false
+            },
+            {"type": "null"}
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "toolRequirement": {
+      "type": "object",
+      "required": ["id", "side_effect_class", "approval_required"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "side_effect_class": {
+          "type": "string",
+          "enum": ["read-only", "local-write", "remote-write", "release", "production", "destructive"]
+        },
+        "permission_boundary": {"type": "string", "minLength": 1},
+        "approval_required": {"type": "boolean"},
+        "approval_lane": {"type": ["string", "null"]},
+        "evidence_kinds": {"type": "array", "items": {"type": "string"}},
+        "usage_limits": {"type": "object"}
+      },
+      "additionalProperties": true
+    },
+    "evidenceRequirement": {
+      "type": "object",
+      "required": ["kind", "required"],
+      "properties": {
+        "kind": {"type": "string", "minLength": 1},
+        "required": {"type": "boolean"},
+        "owner_role": {"type": ["string", "null"]},
+        "stage_id": {"type": ["string", "null"]},
+        "description": {"type": "string"}
+      },
+      "additionalProperties": true
+    },
+    "evidence": {
+      "type": "object",
+      "required": ["kind", "status"],
+      "properties": {
+        "evidence_id": {"type": "string"},
+        "kind": {"type": "string", "minLength": 1},
+        "status": {"type": "string", "enum": ["pending", "passed", "failed", "unverified", "degraded"]},
+        "source": {"type": "string"},
+        "owner_role": {"type": ["string", "null"]},
+        "stage_id": {"type": ["string", "null"]},
+        "summary": {"type": "string"},
+        "references": {"type": "array"},
+        "metadata": {"$ref": "#/$defs/executionMetadata"}
+      },
+      "additionalProperties": true
+    },
+    "approval": {
+      "type": "object",
+      "required": ["trigger", "status"],
+      "properties": {
+        "approval_id": {"type": "string"},
+        "trigger": {"type": "string", "minLength": 1},
+        "status": {"type": "string", "enum": ["required", "pending", "approved", "denied", "waived"]},
+        "approval_lane": {"type": ["string", "null"]},
+        "decision_maker": {"type": ["string", "null"]},
+        "timestamp": {"type": ["string", "null"]},
+        "evidence_refs": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": true
+    },
+    "executionEvent": {
+      "type": "object",
+      "required": ["kind", "status"],
+      "properties": {
+        "event_id": {"type": "string"},
+        "kind": {"type": "string", "minLength": 1},
+        "status": {"type": "string", "minLength": 1},
+        "task_id": {"type": "string"},
+        "session_id": {"type": "string"},
+        "run_id": {"type": "string"},
+        "role_id": {"type": ["string", "null"]},
+        "stage_id": {"type": ["string", "null"]},
+        "evidence_source": {"type": "string", "enum": ["adapter-observed", "runtime-receipt", "agent-reported", "simulated"]},
+        "work_item_id": {"type": "string", "minLength": 1},
+        "dependency_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "worker_ref": {"type": "string", "minLength": 1},
+        "timestamp": {"type": "string"},
+        "evidence_refs": {"type": "array", "items": {"type": "string"}},
+        "metadata": {"$ref": "#/$defs/executionMetadata"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"kind": {"const": "work-item"}}, "required": ["kind"]},
+          "then": {"required": ["evidence_source"]}
+        },
+        {
+          "if": {"properties": {"evidence_source": {"const": "runtime-receipt"}}, "required": ["evidence_source"]},
+          "then": {"properties": {"evidence_refs": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}}}
+        }
+      ],
+      "additionalProperties": true
+    },
+    "agentFoundryEvent": {
+      "type": "object",
+      "required": ["schema_version", "event_id", "timestamp", "severity", "source", "event_type", "attributes"],
+      "properties": {
+        "schema_version": {"type": "string", "const": "1.0.0"},
+        "event_id": {"type": "string", "minLength": 1},
+        "timestamp": {"type": "string", "format": "date-time"},
+        "timestamp_source": {"type": "string", "enum": ["runtime", "agentcaravan_observed"]},
+        "severity": {"type": "string", "enum": ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]},
+        "source": {"type": "string", "minLength": 1},
+        "event_type": {"type": "string", "minLength": 1},
+        "outcome": {"type": "string"},
+        "task_id": {"type": "string"},
+        "session_id": {"type": "string"},
+        "run_id": {"type": "string"},
+        "role_id": {"type": ["string", "null"]},
+        "stage_id": {"type": ["string", "null"]},
+        "attributes": {"type": "object"}
+      },
+      "additionalProperties": true
+    },
+    "executionRealization": {
+      "type": "object",
+      "required": ["mode", "native_subagents"],
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": ["native-parallel", "native-sequential", "simulated-sequential", "human-gated", "unreported"]
+        },
+        "native_subagents": {"type": "boolean"},
+        "parallel_lane_ids": {"type": "array", "items": {"type": "string"}},
+        "parallel_lane_evidence": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["lane_id", "stage_id", "role_id", "worker_ref"],
+            "properties": {
+              "lane_id": {"type": "string", "minLength": 1},
+              "stage_id": {"type": "string", "minLength": 1},
+              "role_id": {"type": "string", "minLength": 1},
+              "worker_ref": {"type": "string", "minLength": 1},
+              "started_at": {"type": "string", "format": "date-time"},
+              "completed_at": {"type": "string", "format": "date-time"}
+            },
+            "additionalProperties": false
+          }
+        },
+        "reason": {"type": "string"},
+        "delegation": {"$ref": "#/\u0024defs/delegationRealization"}
+      },
+      "additionalProperties": true
+    },
+    "delegationRealization": {
+      "type": "object",
+      "required": ["support_level", "execution_mode", "ownership"],
+      "properties": {
+        "support_level": {"type": "string", "enum": ["native", "adapted", "externalized", "unsupported"]},
+        "execution_mode": {"type": "string", "enum": ["parallel", "sequential", "mixed", "none"]},
+        "ownership": {"type": "string", "enum": ["caller-retains", "receiver-takes-over", "code-controlled", "model-routed-within-boundary"]},
+        "child_tasks": {"type": "array", "items": {"$ref": "#/\u0024defs/delegatedWorker"}}
+      },
+      "additionalProperties": true
+    },
+    "delegatedWorker": {
+      "type": "object",
+      "required": ["delegation_id", "role_id", "status"],
+      "properties": {
+        "delegation_id": {"type": "string", "minLength": 1},
+        "role_id": {"type": "string", "minLength": 1},
+        "worker_ref": {"type": "string", "minLength": 1},
+        "status": {"type": "string", "enum": ["started", "completed", "blocked", "failed", "cancelled"]},
+        "summary": {"type": "string"}
+      },
+      "additionalProperties": true
+    },
+    "roleTurn": {
+      "type": "object",
+      "required": ["role_turn_id", "task_id", "role_id", "status", "summary"],
+      "properties": {
+        "role_turn_id": {"type": "string", "minLength": 1},
+        "task_id": {"type": "string", "minLength": 1},
+        "role_id": {"type": "string", "minLength": 1},
+        "worker_ref": {"type": "string", "minLength": 1},
+        "stage_id": {"type": ["string", "null"]},
+        "status": {"type": "string", "enum": ["projected", "started", "completed", "blocked", "unverified"]},
+        "objective": {"type": "string"},
+        "summary": {"type": "string", "minLength": 1},
+        "evidence_refs": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": true
+    },
+    "checkpoint": {
+      "type": "object",
+      "required": ["checkpoint_id", "task_id", "status", "resumable"],
+      "properties": {
+        "checkpoint_id": {"type": "string", "minLength": 1},
+        "task_id": {"type": "string", "minLength": 1},
+        "session_id": {"type": ["string", "null"]},
+        "run_id": {"type": ["string", "null"]},
+        "stage_id": {"type": ["string", "null"]},
+        "sequence": {"type": ["integer", "null"], "minimum": 0},
+        "status": {"type": "string", "enum": ["created", "accepted", "resumed", "superseded"]},
+        "resumable": {"type": "boolean"},
+        "state_ref": {"type": ["string", "null"]},
+        "source": {"type": "string"},
+        "created_at": {"type": "string"},
+        "resumed_at": {"type": ["string", "null"]}
+      },
+      "additionalProperties": true
+    },
+    "idempotencyRecord": {
+      "type": "object",
+      "required": ["idempotency_key", "operation", "status", "side_effect_applied"],
+      "properties": {
+        "idempotency_key": {"type": "string", "minLength": 1},
+        "operation": {"type": "string", "minLength": 1},
+        "scope": {"type": "string", "enum": ["task", "session", "run", "external-system"]},
+        "status": {"type": "string", "enum": ["new", "applied", "replayed", "skipped", "conflict"]},
+        "side_effect_applied": {"type": "boolean"},
+        "source_event_id": {"type": ["string", "null"]},
+        "result_ref": {"type": ["string", "null"]}
+      },
+      "additionalProperties": true
+    },
+    "degradedCapability": {
+      "type": "object",
+      "required": ["capability", "mode"],
+      "properties": {
+        "capability": {"type": "string", "minLength": 1},
+        "mode": {"type": "string", "enum": ["adapted", "externalized"]},
+        "fallback": {"type": ["string", "null"]},
+        "reason": {"type": "string"}
+      },
+      "additionalProperties": true
+    },
+    "reasoningEvidence": {
+      "type": "object",
+      "required": ["stage_id", "role_id", "requested_level", "status"],
+      "properties": {
+        "stage_id": {"type": "string", "minLength": 1},
+        "role_id": {"type": "string", "minLength": 1},
+        "worker_ref": {"type": ["string", "null"], "minLength": 1},
+        "requested_level": {"type": "string", "minLength": 1},
+        "requested_runtime_value": {"type": ["string", "null"], "minLength": 1},
+        "effective_level": {"type": ["string", "null"], "minLength": 1},
+        "effective_runtime_value": {"type": ["string", "null"], "minLength": 1},
+        "status": {"type": "string", "enum": ["unverified", "runtime-observed", "failed"]},
+        "dispatch_status": {"type": "string", "enum": ["not-attempted", "accepted", "failed", "unknown"]},
+        "telemetry_status": {"type": "string", "enum": ["unverified", "observed", "unavailable", "failed"]},
+        "evidence_source": {"type": ["string", "null"], "minLength": 1}
+      },
+      "additionalProperties": true
+    },
+    "normalizedExecutionResult": {
+      "type": "object",
+      "required": [
+        "artifact_type",
+        "version",
+        "task_id",
+        "plan_id",
+        "status",
+        "execution_realization",
+        "active_roles",
+        "completed_stages",
+        "decisions",
+        "role_turns",
+        "handoffs",
+        "approvals",
+        "artifacts",
+        "evidence",
+        "verification",
+        "failures",
+        "retries",
+        "idempotency_records",
+        "degraded_capabilities",
+        "unresolved_conditions"
+      ],
+      "properties": {
+        "artifact_type": {"const": "normalized-execution-result"},
+        "version": {"type": "string", "minLength": 1},
+        "scenario_id": {"type": ["string", "null"]},
+        "task_id": {"type": "string", "minLength": 1},
+        "plan_id": {"type": "string", "minLength": 1},
+        "status": {"type": "string", "enum": ["completed", "interrupted", "blocked", "blocked-until-approved", "failed", "escalated", "degraded", "cancelled"]},
+        "execution_realization": {"$ref": "#/$defs/executionRealization"},
+        "execution_topology": {"anyOf": [{"$ref": "#/$defs/executionTopology"}, {"type": "null"}]},
+        "topology_conformance": {
+          "type": "object",
+          "required": ["status", "planned_mode", "observed_mode", "observed_parallel_lane_ids", "issues"],
+          "properties": {
+            "status": {"enum": ["pass", "failed", "unverified", "not-applicable"]},
+            "planned_mode": {"type": "string"},
+            "observed_mode": {"type": "string"},
+            "observed_parallel_lane_ids": {"type": "array", "items": {"type": "string"}},
+            "issues": {"type": "array", "items": {"type": "string"}}
+          },
+          "additionalProperties": false
+        },
+        "scheduling_conformance": {
+          "type": "object",
+          "required": ["status", "planned_work_item_ids", "observed_work_item_ids", "issues"],
+          "properties": {
+            "status": {"enum": ["pass", "failed", "unverified", "not-applicable"]},
+            "planned_work_item_ids": {"type": "array", "items": {"type": "string"}},
+            "observed_work_item_ids": {"type": "array", "items": {"type": "string"}},
+            "wait_durations_seconds": {"type": "object", "additionalProperties": {"type": "number", "minimum": 0}},
+            "work_during_wait": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["work_item_id", "other_work_item_ids"],
+                "properties": {
+                  "work_item_id": {"type": "string"},
+                  "other_work_item_ids": {"type": "array", "items": {"type": "string"}}
+                },
+                "additionalProperties": false
+              }
+            },
+            "issues": {"type": "array", "items": {"type": "string"}}
+          },
+          "additionalProperties": false
+        },
+        "parallel_timing_conformance": {
+          "type": "object",
+          "required": ["status", "issues"],
+          "properties": {
+            "status": {"enum": ["pass", "failed", "unverified", "not-applicable"]},
+            "issues": {"type": "array", "items": {"type": "string"}}
+          },
+          "additionalProperties": false
+        },
+        "execution_diagnostics": {"type": "object"},
+        "active_roles": {"type": "array", "items": {"type": "string"}},
+        "completed_stages": {"type": "array", "items": {"type": "string"}},
+        "decisions": {"type": "array"},
+        "role_turns": {"type": "array", "items": {"$ref": "#/$defs/roleTurn"}},
+        "handoffs": {"type": "array"},
+        "approvals": {"type": "array"},
+        "execution_events": {"type": "array", "items": {"$ref": "#/$defs/executionEvent"}},
+        "artifacts": {"type": "array"},
+        "evidence": {"type": "array"},
+        "verification": {"type": "array"},
+        "failures": {"type": "array"},
+        "retries": {"type": "array"},
+        "checkpoint": {"anyOf": [{"$ref": "#/$defs/checkpoint"}, {"type": "null"}]},
+        "idempotency_records": {"type": "array", "items": {"$ref": "#/$defs/idempotencyRecord"}},
+        "degraded_capabilities": {"type": "array", "items": {"$ref": "#/$defs/degradedCapability"}},
+        "workflow_assessment": {"$ref": "#/$defs/workflowAssessment"},
+        "resume": {"type": ["object", "null"]},
+        "unresolved_conditions": {"type": "array", "items": {"type": "string"}},
+        "reasoning_evidence": {"type": "array", "items": {"$ref": "#/$defs/reasoningEvidence"}},
+        "run": {"type": "object"},
+        "metadata": {"$ref": "#/$defs/executionMetadata"}
+      },
+      "additionalProperties": true
+    }
+  }
+}

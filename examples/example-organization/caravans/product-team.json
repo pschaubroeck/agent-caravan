@@ -1,0 +1,24 @@
+{
+  "artifact_type": "team-instance",
+  "id": "example-organization-product-team",
+  "version": "1.0.0",
+  "scope": "organization",
+  "name": "Product Team",
+  "organization_catalog_id": "example-organization",
+  "team_blueprint_id": "information-technology-core-team",
+  "ownership_boundary": {
+    "summary": "Customer-facing product workflows",
+    "owned_surfaces": [
+      "customer-facing product features",
+      "product workflow behavior and acceptance"
+    ],
+    "out_of_scope": [
+      "shared platform services and libraries owned by the Platform Team",
+      "organization-wide policy decisions not delegated to this team"
+    ]
+  },
+  "role_overlays": [],
+  "domain_packs": [],
+  "specialization_packs": [],
+  "runtime_defaults": []
+}

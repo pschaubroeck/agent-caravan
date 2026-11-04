@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "agentfoundry/portable-artifact-identity.schema.json",
+  "title": "Portable framework artifact identity",
+  "type": "object",
+  "required": ["artifact_type", "id", "version", "scope"],
+  "properties": {
+    "artifact_type": {"type": "string", "minLength": 1},
+    "id": {"type": "string", "minLength": 1, "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"},
+    "version": {"type": "string", "minLength": 1},
+    "scope": {"enum": ["shared", "organization", "team", "local", "session"]},
+    "name": {"type": "string", "minLength": 1},
+    "documentation_references": {
+      "type": "array",
+      "items": {"$ref": "documentation-reference.schema.json"}
+    }
+  },
+  "additionalProperties": true
+}

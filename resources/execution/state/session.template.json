@@ -1,0 +1,14 @@
+{
+  "session_id": "<session-id>",
+  "task_id": "<task-id>",
+  "selected_context": {},
+  "runtime": {},
+  "execution_realization": {"mode": "unreported", "native_subagents": false},
+  "active_roles": [],
+  "role_turns": [],
+  "handoffs": [],
+  "checkpoints": [],
+  "status": "active",
+  "started_at": "<timestamp>",
+  "ended_at": null
+}

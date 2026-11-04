@@ -1,0 +1,20 @@
+{
+  "name": "agentcaravan-examples",
+  "interface": {
+    "displayName": "Agent Caravan Examples"
+  },
+  "plugins": [
+    {
+      "name": "example-organization-platform-team",
+      "source": {
+        "source": "local",
+        "path": "./example-organization-platform-team"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

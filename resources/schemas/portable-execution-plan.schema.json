@@ -1,0 +1,249 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "agentfoundry/portable-execution-plan.schema.json",
+  "title": "Agent Caravan Portable Execution Plan",
+  "type": "object",
+  "required": [
+    "artifact_type",
+    "id",
+    "version",
+    "scope",
+    "task",
+    "context",
+    "role_assignments",
+    "steps",
+    "communication",
+    "policy",
+    "termination",
+    "required_outputs"
+  ],
+  "properties": {
+    "artifact_type": {"const": "portable-execution-plan"},
+    "id": {"type": "string", "minLength": 1},
+    "version": {"type": "string", "minLength": 1},
+    "scope": {"type": "string", "enum": ["task", "session", "local"]},
+    "task": {
+      "type": "object",
+      "required": ["task_id", "objective"],
+      "properties": {
+        "task_id": {"type": "string", "minLength": 1},
+        "objective": {"type": "string", "minLength": 1},
+        "references": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["system_type", "reference_type", "identifier"],
+            "properties": {
+              "system_type": {"type": "string", "minLength": 1},
+              "reference_type": {"type": "string", "minLength": 1},
+              "identifier": {"type": "string", "minLength": 1}
+            },
+            "additionalProperties": true
+          }
+        },
+        "metadata": {"type": "object"},
+        "extensions": {"type": "object"},
+        "execution_diagnostics": {"type": "boolean", "default": false}
+      },
+      "additionalProperties": true
+    },
+    "context": {
+      "type": "object",
+      "required": ["organization_catalog_id", "team_blueprint_id", "workflow_id"],
+      "properties": {
+        "organization_catalog_id": {"type": "string", "minLength": 1},
+        "team_instance_id": {"type": "string", "minLength": 1},
+        "team_blueprint_id": {"type": "string", "minLength": 1},
+        "workflow_id": {"type": "string", "minLength": 1},
+        "team_context": {
+          "type": "object",
+          "properties": {
+            "mission": {"type": "string"},
+            "work_surfaces": {"type": "array", "items": {"type": "string"}},
+            "knowledge_sources": {"type": "array", "items": {"type": "string"}},
+            "working_agreements": {"type": "string"},
+            "instructions": {"type": "string"},
+            "preferred_roles": {"type": "array", "items": {"type": "string"}},
+            "role_guidance": {"type": "string"}
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "knowledge_context": {
+      "type": "object",
+      "required": ["layers"],
+      "properties": {
+        "layers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["artifact_type", "id", "version", "scope"],
+            "properties": {
+              "artifact_type": {"type": "string", "enum": ["domain-pack", "specialization-pack"]},
+              "id": {"type": "string", "minLength": 1},
+              "version": {"type": "string", "minLength": 1},
+              "scope": {"type": "string", "minLength": 1},
+              "owner_team_instance_id": {"type": "string"},
+              "parent_domain_pack_id": {"type": "string"},
+              "purpose": {"type": "string"},
+              "domain_intent": {"type": "string"},
+              "knowledge_surface": {"type": "array", "items": {"type": "string"}},
+              "trusted_sources": {"type": "array", "items": {"type": "string"}},
+              "loading_guidance": {"type": "array", "items": {"type": "string"}},
+              "documentation_references": {
+                "type": "array",
+                "items": {"$ref": "documentation-reference.schema.json"}
+              },
+              "role_guidance": {"type": "object", "additionalProperties": {"type": "string"}}
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "role_assignments": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["role_id", "participation"],
+        "properties": {
+          "role_id": {"type": "string", "minLength": 1},
+          "role_version": {"type": "string", "minLength": 1},
+          "participation": {"type": "string", "enum": ["entry", "primary", "supporting", "reviewer"]},
+          "source_chain": {"type": "array", "items": {"type": "string"}},
+          "documentation_references": {
+            "type": "array",
+            "items": {"$ref": "documentation-reference.schema.json"}
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "steps": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["step_id", "kind", "role_ids", "mode"],
+        "properties": {
+          "step_id": {"type": "string", "minLength": 1},
+          "kind": {"type": "string", "enum": ["task", "message", "handoff", "artifact", "state-update", "tool-request", "approval-request", "result", "failure", "completion"]},
+          "role_ids": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+          "mode": {"type": "string", "minLength": 1},
+          "condition": {"type": ["string", "null"]},
+          "expected_outputs": {"type": "array", "items": {"type": "string"}}
+        },
+        "additionalProperties": false
+      }
+    },
+    "communication": {
+      "type": "object",
+      "properties": {
+        "requires_structured_handoff": {"type": "boolean"},
+        "handoff_semantics": {
+          "type": "string",
+          "enum": ["explicit-ownership-transfer", "caller-retains", "mixed"]
+        },
+        "allowed_role_handoffs": {"type": "array"}
+      },
+      "additionalProperties": true
+    },
+    "policy": {
+      "type": "object",
+      "required": ["policy_ids", "approval_requirements"],
+      "properties": {
+        "policy_ids": {"type": "array", "items": {"type": "string"}},
+        "approval_requirements": {"type": "array", "items": {"type": "string"}},
+        "knowledge_access": {
+          "type": "object",
+          "required": ["external_sources", "approved_sources"],
+          "properties": {
+            "external_sources": {"type": "string", "enum": ["enabled", "approved_sources", "disabled"]},
+            "approved_sources": {
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  {"type": "string", "minLength": 1},
+                  {
+                    "type": "object",
+                    "required": ["source"],
+                    "properties": {
+                      "id": {"type": "string", "minLength": 1},
+                      "source": {"type": "string", "minLength": 1}
+                    },
+                    "additionalProperties": false
+                  }
+                ]
+              }
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": true
+    },
+    "capability_requirements": {
+      "type": "object",
+      "properties": {
+        "required": {"type": "array", "items": {"type": "string"}},
+        "preferred": {"type": "array", "items": {"type": "string"}},
+        "support_levels": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "enum": ["native", "adapted", "externalized", "unsupported"]
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "execution_topology": {
+      "$ref": "execution-contracts.schema.json#/$defs/executionTopology"
+    },
+    "tool_requirements": {
+      "type": "array",
+      "items": {"$ref": "execution-contracts.schema.json#/$defs/toolRequirement"}
+    },
+    "evidence_requirements": {
+      "type": "array",
+      "items": {"$ref": "execution-contracts.schema.json#/$defs/evidenceRequirement"}
+    },
+    "termination": {"$ref": "execution-contracts.schema.json#/$defs/termination"},
+    "required_outputs": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "reasoning_policy": {
+      "type": "object",
+      "required": ["default", "role_defaults", "stage_overrides"],
+      "properties": {
+        "default": {"type": "string", "enum": ["focused", "standard", "deep"]},
+        "role_defaults": {"type": "object", "additionalProperties": {"type": "string", "enum": ["focused", "standard", "deep"]}},
+        "stage_overrides": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": {"type": "string", "enum": ["focused", "standard", "deep"]}
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "reasoning_assignments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["stage_id", "role_id", "level", "source"],
+        "properties": {
+          "stage_id": {"type": "string", "minLength": 1},
+          "role_id": {"type": "string", "minLength": 1},
+          "level": {"type": "string", "enum": ["focused", "standard", "deep"]},
+          "source": {"type": "string", "enum": ["default", "role-default", "stage-override"]}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

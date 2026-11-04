@@ -1,0 +1,41 @@
+{
+  "artifact_type": "policy",
+  "id": "information-technology-core-team-safety-policy",
+  "version": "1.0.0",
+  "scope": "shared",
+  "name": "Information Technology Core Team Safety Policy",
+  "policy_type": "guardrail",
+  "input_validation": {
+    "required": ["objective", "repository_or_work_boundary"],
+    "block_on_ambiguity": true,
+    "trusted_context_order": ["organization", "team", "domain", "specialization", "task"]
+  },
+  "tool_authorization": {
+    "default": "bounded",
+    "sensitive_operations": ["remote_mutation", "new_dependency_or_integration", "release_or_deployment", "production_change", "destructive_local_action"],
+    "require_explicit_task_intent": true
+  },
+  "knowledge_access": {
+    "external_sources": "enabled",
+    "approved_sources": []
+  },
+  "approval_requirements": [
+    {"trigger": "new_dependency_or_integration", "approval_lane": "program-manager", "requires_human_confirmation": true, "on_missing": "block"},
+    {"trigger": "remote_mutation", "approval_lane": "human", "requires_human_confirmation": true, "on_missing": "block"},
+    {"trigger": "release_or_deployment", "approval_lane": "release-manager", "requires_human_confirmation": true, "on_missing": "block"},
+    {"trigger": "production_change", "approval_lane": "human", "requires_human_confirmation": true, "on_missing": "block"}
+  ],
+  "retry": {"default_max_attempts": 2, "denied_action_max_attempts": 0, "requires_new_evidence": true},
+  "escalation": {
+    "technical": "tech-owner",
+    "architecture": "software-architect",
+    "quality": "quality-engineer",
+    "governance": "program-manager",
+    "unresolved_approval": "human"
+  },
+  "termination": {
+    "success_conditions": ["requested work is complete", "required evidence is recorded"],
+    "failure_conditions": ["required approval is denied", "unsafe action cannot be bounded", "required role or runtime capability is unavailable"],
+    "unresolved_conditions": ["approval pending", "material quality risk pending", "ambiguous scope"]
+  }
+}

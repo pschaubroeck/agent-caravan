@@ -1,0 +1,226 @@
+{
+  "context": {
+    "organization_catalog_id": "sample-organization-technology-catalog",
+    "team_instance_id": "sample-product-integrations-team",
+    "runtime_adapter_id": "codex-desktop-agent-runtime",
+    "runtime_profile_id": "codex-desktop-sample-product-engineer-ii"
+  },
+  "artifacts": [
+    {
+      "artifact_type": "organization-catalog",
+      "id": "sample-organization-technology-catalog",
+      "version": "1.0.0",
+      "scope": "organization",
+      "published_artifacts": {
+        "team-blueprint": ["information-technology-core-team"],
+        "team-instance": ["sample-product-integrations-team"],
+        "role": [
+          "program-manager",
+          "product-owner",
+          "tech-owner",
+          "engineer",
+          "engineer-ii",
+          "quality-engineer",
+          "software-architect",
+          "release-manager"
+        ],
+        "domain-pack": ["sample-product"],
+        "specialization-pack": ["sample-product-integrations-specialization"],
+        "overlay": ["sample-product-engineer-ii"],
+        "runtime-adapter": ["codex-desktop-agent-runtime"],
+        "runtime-profile": ["codex-desktop-sample-product-engineer-ii"]
+      }
+    },
+    {
+      "artifact_type": "role",
+      "id": "program-manager",
+      "version": "1.0.0",
+      "scope": "organization"
+    },
+    {
+      "artifact_type": "role",
+      "id": "product-owner",
+      "version": "1.0.0",
+      "scope": "organization"
+    },
+    {
+      "artifact_type": "role",
+      "id": "tech-owner",
+      "version": "1.0.0",
+      "scope": "organization"
+    },
+    {
+      "artifact_type": "role",
+      "id": "engineer",
+      "version": "1.0.0",
+      "scope": "organization"
+    },
+    {
+      "artifact_type": "role",
+      "id": "engineer-ii",
+      "version": "1.0.0",
+      "scope": "organization",
+      "extends": "engineer"
+    },
+    {
+      "artifact_type": "role",
+      "id": "quality-engineer",
+      "version": "1.0.0",
+      "scope": "organization"
+    },
+    {
+      "artifact_type": "role",
+      "id": "software-architect",
+      "version": "1.0.0",
+      "scope": "organization"
+    },
+    {
+      "artifact_type": "role",
+      "id": "release-manager",
+      "version": "1.0.0",
+      "scope": "organization"
+    },
+    {
+      "artifact_type": "team-blueprint",
+      "id": "information-technology-core-team",
+      "version": "1.0.0",
+      "scope": "organization",
+      "core_roles": [
+        "program-manager",
+        "product-owner",
+        "tech-owner",
+        "engineer",
+        "quality-engineer",
+        "software-architect",
+        "release-manager"
+      ],
+      "mandatory_debates": ["solution + testability debate", "review resolution debate"],
+      "debate_participants": {
+        "solution + testability debate": ["product-owner", "tech-owner", "software-architect", "quality-engineer"],
+        "review resolution debate": ["engineer", "tech-owner", "software-architect"]
+      },
+      "blocking_lanes": ["program-manager", "product-owner", "tech-owner", "engineer", "quality-engineer", "software-architect", "release-manager"],
+      "stage_owners": ["program-manager", "product-owner", "engineer", "quality-engineer", "release-manager"],
+      "coverage_requirements": {
+        "implementation": ["engineer"],
+        "quality": ["quality-engineer"]
+      },
+      "documentation_ownership": {
+        "engineer": "code-adjacent documentation",
+        "software-architect": "architecture guidance"
+      }
+    },
+    {
+      "artifact_type": "team-instance",
+      "id": "sample-product-integrations-team",
+      "version": "1.0.0",
+      "scope": "organization",
+      "team_blueprint_id": "information-technology-core-team",
+      "role_overlays": ["sample-product-engineer-ii"],
+      "domain_packs": ["sample-product"],
+      "specialization_packs": ["sample-product-integrations-specialization"],
+      "runtime_defaults": ["codex-desktop-agent-runtime"]
+    },
+    {
+      "artifact_type": "domain-pack",
+      "id": "sample-product",
+      "version": "1.0.0",
+      "scope": "organization",
+      "purpose": "Provide shared terminology and product context.",
+      "domain_intent": "Example Product supports customer workflows and external partner integrations.",
+      "knowledge_surface": [
+        "shared product terminology",
+        "workflow state and cross-team boundaries"
+      ],
+      "trusted_sources": [
+        "https://docs.example.org/sample-product/architecture",
+        "repository instructions, source code, and tests"
+      ],
+      "loading_guidance": [
+        "identify the owning team",
+        "load the team's specialization",
+        "use this pack for shared product context"
+      ],
+      "role_guidance": {
+        "product-owner": "Connect product behavior to customer outcomes.",
+        "software-architect": "Preserve cross-team system boundaries."
+      }
+    },
+    {
+      "artifact_type": "specialization-pack",
+      "id": "sample-product-integrations-specialization",
+      "version": "1.0.0",
+      "scope": "team",
+      "owner_team_instance_id": "sample-product-integrations-team",
+      "parent_domain_pack_id": "sample-product",
+      "purpose": "Give every role durable context about partner contracts and reliable data exchange.",
+      "knowledge_surface": [
+        "partner interface contracts, schemas, and version compatibility",
+        "field mappings, validation, retries, and idempotency behavior"
+      ],
+      "trusted_sources": [
+        "repository-local instructions in owned repositories",
+        "https://docs.example.org/sample-product/integrations"
+      ],
+      "loading_guidance": [
+        "load the parent sample-product domain pack",
+        "identify the partner contract and owning integration",
+        "read local instructions, schemas, and contract references"
+      ],
+      "role_guidance": {
+        "product-owner": "Connect partner capabilities and limits to product outcomes.",
+        "tech-owner": "Preserve interface contracts and identify consumer impacts early.",
+        "quality-engineer": "Verify schema, failure, retry, and reconciliation cases.",
+        "engineer": "Follow established integration patterns and preserve idempotent behavior."
+      }
+    },
+    {
+      "artifact_type": "overlay",
+      "id": "sample-product-engineer-ii",
+      "version": "1.0.0",
+      "scope": "team",
+      "operation": "replace",
+      "priority": 100,
+      "target_artifact_type": "team-instance",
+      "target_artifact_id": "sample-product-integrations-team",
+      "target_role_id": "engineer",
+      "replacement_artifact_type": "role",
+      "replacement_role_id": "engineer-ii"
+    },
+    {
+      "artifact_type": "runtime-adapter",
+      "id": "codex-desktop-agent-runtime",
+      "version": "1.0.0",
+      "scope": "local",
+      "capabilities": {
+        "structured_output_contracts": "native",
+        "dynamic_context_loading": "native",
+        "local_command_execution": "native",
+        "code_editing": "native",
+        "role_handoff": "native",
+        "tool_approval_gates": "native",
+        "execution_trace": "native",
+        "tool_permission_scoping": "native",
+        "parallel_lane_execution": "adapted",
+        "document_attachment_support": "native",
+        "durable_memory": "externalized"
+      }
+    },
+    {
+      "artifact_type": "runtime-profile",
+      "id": "codex-desktop-sample-product-engineer-ii",
+      "version": "1.0.0",
+      "scope": "organization",
+      "target_adapter_id": "codex-desktop-agent-runtime",
+      "required_capabilities": [
+        "structured_output_contracts",
+        "dynamic_context_loading",
+        "local_command_execution",
+        "code_editing",
+        "role_handoff",
+        "tool_approval_gates"
+      ],
+      "preferred_capabilities": ["execution_trace", "tool_permission_scoping", "parallel_lane_execution"]
+    }
+  ]
+}

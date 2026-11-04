@@ -1,0 +1,17 @@
+{
+  "sources": [
+    {
+      "type": "git",
+      "url": "git@gitlab.example.org:example-org/team-catalog.git",
+      "checkout": "<shared-catalog-checkout>",
+      "subdirectory": "examples/example-organization"
+    }
+  ],
+  "active_context": {
+    "organization_catalog_id": "example-organization",
+    "team_instance_id": "example-organization-platform-team",
+    "runtime_adapter_id": "codex-desktop-agent-runtime",
+    "runtime_profile_id": "codex-desktop-information-technology-core-team",
+    "validation_profile_id": "organization-shared"
+  }
+}

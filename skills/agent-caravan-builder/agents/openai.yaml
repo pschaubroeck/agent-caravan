@@ -1,0 +1,4 @@
+interface:
+  display_name: "Agent Caravan Setup Builder"
+  short_description: "Set up and customize Agent Caravan teams"
+  default_prompt: "Use $agent-caravan-builder to set up or update an Agent Caravan team, reusing existing configuration, previewing changes, preserving Markdown customizations, and validating the result before advanced artifact authoring."

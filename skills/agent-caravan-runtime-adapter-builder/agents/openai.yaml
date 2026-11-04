@@ -1,0 +1,4 @@
+interface:
+  display_name: "Agent Caravan Runtime Integration Builder"
+  short_description: "Build AI runtime integrations and mappings"
+  default_prompt: "Use $agent-caravan-runtime-adapter-builder to build an AI runtime integration or mapping."

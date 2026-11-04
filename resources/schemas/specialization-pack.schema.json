@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "agentfoundry/specialization-pack.schema.json",
+  "title": "Specialization pack",
+  "allOf": [
+    {"$ref": "portable-artifact-identity.schema.json"},
+    {"properties": {"artifact_type": {"const": "specialization-pack"}, "owner_team_instance_id": {"type": "string", "minLength": 1}, "parent_domain_id": {"type": "string", "minLength": 1}}, "required": ["owner_team_instance_id", "parent_domain_id"]}
+  ]
+}

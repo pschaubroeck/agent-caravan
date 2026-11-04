@@ -1,0 +1,252 @@
+{
+  "manifest_type": "agentfoundry-catalog",
+  "id": "agentfoundry-reference-catalog",
+  "name": "Agent Caravan Reference Catalog",
+  "description": "Reference catalog for the Agent Caravan organization framework.",
+  "artifact_roots": {
+    "roles": "resources/core/responsibilities",
+    "team_blueprints": "resources/core/caravan-templates",
+    "team_instances": "examples/sample-organization/caravans",
+    "domain_packs": "examples/sample-organization/domain-knowledge",
+    "specialization_packs": "examples/sample-organization/capability-knowledge",
+    "organization_catalogs": "examples/sample-organization/organizations",
+    "overlays": "examples/sample-organization/configuration-overrides",
+    "runtime_adapters": "resources/runtime/integrations",
+    "runtime_profiles": "resources/runtime/mappings",
+    "resolved_examples": "examples/sample-organization/resolved",
+    "skills": "skills"
+  },
+  "machine_readable_bundles": [
+    "resources/core/agentcaravan-core-team.json",
+    "resources/runtime/agentcaravan-codex-runtime.json",
+    "resources/runtime/agentcaravan-opencode-runtime.json",
+    "resources/runtime/agentcaravan-kiro-runtime.json"
+  ],
+  "machine_readable_artifacts": [
+    "examples/example-organization/organizations/example-organization-catalog.json",
+    "examples/example-organization/caravans/platform-team.json",
+    "examples/example-organization/caravans/product-team.json"
+  ],
+  "machine_readable_roots": [
+    "resources/core",
+    "resources/runtime",
+    "examples/example-organization",
+    "resources/execution/workflows",
+    "resources/execution/policies",
+    "examples/codex-plugins/example-organization-platform-team/team-snapshot"
+  ],
+  "distribution_snapshot_pairs": [
+    {
+      "snapshot": "examples/codex-plugins/example-organization-platform-team/team-snapshot/example-organization-catalog.json",
+      "canonical": "examples/example-organization/organizations/example-organization-catalog.json"
+    },
+    {
+      "snapshot": "examples/codex-plugins/example-organization-platform-team/team-snapshot/platform-team.json",
+      "canonical": "examples/example-organization/caravans/platform-team.json"
+    },
+    {
+      "snapshot": "examples/codex-plugins/example-organization-platform-team/team-snapshot/product-team.json",
+      "canonical": "examples/example-organization/caravans/product-team.json"
+    }
+  ],
+  "portable_execution_plan_examples": [
+    "tests/fixtures/portable-feature-delivery-plan.json"
+  ],
+  "markdown_artifact_roots": [
+    "resources/core/responsibilities",
+    "resources/core/caravan-templates",
+    "examples/sample-organization/domain-knowledge",
+    "examples/sample-organization/organizations",
+    "examples/sample-organization/configuration-overrides",
+    "examples/sample-organization/capability-knowledge",
+    "examples/sample-organization/caravans",
+    "examples/sample-organization/runtime-mappings",
+    "resources/runtime/integrations",
+    "resources/runtime/mappings"
+  ],
+  "markdown_artifact_documents": [
+    "resources/core/responsibilities/engineer.md",
+    "resources/core/responsibilities/engineer-ii.md",
+    "resources/core/responsibilities/product-owner.md",
+    "resources/core/responsibilities/program-manager.md",
+    "resources/core/responsibilities/quality-engineer.md",
+    "resources/core/responsibilities/release-manager.md",
+    "resources/core/responsibilities/software-architect.md",
+    "resources/core/responsibilities/tech-owner.md",
+    "resources/core/caravan-templates/information-technology-core-team.md",
+    "examples/sample-organization/domain-knowledge/sample-product.md",
+    "examples/sample-organization/organizations/sample-organization-technology-catalog.md",
+    "examples/sample-organization/configuration-overrides/sample-product-engineer-ii.md",
+    "examples/sample-organization/capability-knowledge/sample-product-integrations-specialization.md",
+    "examples/sample-organization/capability-knowledge/sample-product-workflows-specialization.md",
+    "examples/sample-organization/caravans/sample-product-integrations-team.md",
+    "examples/sample-organization/caravans/sample-product-workflows-team.md",
+    "examples/sample-organization/runtime-mappings/codex-desktop-sample-platform-engineer.md",
+    "examples/sample-organization/runtime-mappings/codex-desktop-sample-product-engineer-ii.md",
+    "examples/sample-organization/runtime-mappings/codex-desktop-sample-product-team.md",
+    "resources/runtime/integrations/codex-desktop-agent-runtime.md",
+    "resources/runtime/integrations/kiro-ide-agent-runtime.md",
+    "resources/runtime/integrations/opencode-agent-runtime.md",
+    "resources/runtime/mappings/broker-gateway-information-technology-core-team.md",
+    "resources/runtime/mappings/codex-desktop-information-technology-core-team.md",
+    "resources/runtime/mappings/kiro-ide-information-technology-core-team.md",
+    "resources/runtime/mappings/opencode-information-technology-core-team.md"
+  ],
+  "specifications": [
+    "resources/specifications/role-spec-format.md",
+    "resources/specifications/team-blueprint-format.md",
+    "resources/specifications/domain-pack-spec.md",
+    "resources/specifications/overlay-spec.md",
+    "resources/specifications/logical-artifact-overlay-model.md",
+    "resources/specifications/runtime-capability-adapter-spec.md",
+    "resources/specifications/runtime-profile-format.md",
+    "resources/specifications/framework-validation-spec.md",
+    "resources/specifications/artifact-bundle-spec.md",
+    "resources/specifications/execution-profile-spec.md",
+    "resources/specifications/portable-execution-plan-spec.md",
+    "resources/specifications/task-session-state-spec.md",
+    "resources/specifications/handoff-contract-spec.md",
+    "resources/specifications/serialization-format.md",
+    "resources/specifications/adapter-conformance-spec.md",
+    "resources/specifications/runtime-verification-record-spec.md"
+  ],
+  "runtime_adapter_docs": [
+    "docs/integrations/codex-adapter.md",
+    "docs/integrations/opencode-adapter.md",
+    "docs/integrations/kiro-ide-adapter.md"
+  ],
+  "getting_started": "docs/getting-started.md",
+  "execution_workflows": [
+    "resources/execution/workflows/information-technology-core-team-basic-work.json",
+    "resources/execution/workflows/information-technology-core-team-feature-delivery.json"
+  ],
+  "policy_artifacts": [
+    "resources/execution/policies/information-technology-core-team-safety-policy.json"
+  ],
+  "schemas": [
+    "resources/schemas/portable-artifact-identity.schema.json",
+    "resources/schemas/organization-catalog.schema.json",
+    "resources/schemas/role.schema.json",
+    "resources/schemas/team-blueprint.schema.json",
+    "resources/schemas/team-instance.schema.json",
+    "resources/schemas/domain-pack.schema.json",
+    "resources/schemas/specialization-pack.schema.json",
+    "resources/schemas/overlay.schema.json",
+    "resources/schemas/runtime-adapter.schema.json",
+    "resources/schemas/runtime-profile.schema.json",
+    "resources/schemas/execution-contracts.schema.json",
+    "resources/schemas/execution-result.schema.json",
+    "resources/schemas/execution-profile.schema.json",
+    "resources/schemas/policy.schema.json",
+    "resources/schemas/handoff.schema.json",
+    "resources/schemas/task-handoff.schema.json",
+    "resources/schemas/task-state.schema.json",
+    "resources/schemas/session-state.schema.json",
+    "resources/schemas/run-record.schema.json",
+    "resources/schemas/portable-execution-plan.schema.json",
+    "resources/schemas/runtime-verification-record.schema.json"
+  ],
+  "conformance_scenarios": "tests/conformance/scenarios.json",
+  "execution_state_templates": [
+    "resources/execution/state/task.template.json",
+    "resources/execution/state/session.template.json",
+    "resources/execution/state/run.template.json"
+  ],
+  "examples": [
+    "examples/README.md",
+    "examples/codex-plugins/.agents/plugins/marketplace.json",
+    "examples/codex-plugins/example-organization-platform-team/README.md",
+    "examples/codex-plugins/example-organization-platform-team/plugin.json",
+    "examples/codex-plugins/example-organization-platform-team/scripts/check_snapshot.py",
+    "examples/codex-plugins/example-organization-platform-team/scripts/install_snapshot.py",
+    "examples/codex-plugins/example-organization-platform-team/skills/setup-example-team/SKILL.md",
+    "examples/codex-plugins/example-organization-platform-team/team-snapshot/example-organization-catalog.json",
+    "examples/codex-plugins/example-organization-platform-team/team-snapshot/platform-team.json",
+    "examples/codex-plugins/example-organization-platform-team/team-snapshot/product-team.json",
+    "examples/coworker-sharing/README.md",
+    "examples/coworker-sharing/profiles/coworker-one/config.json",
+    "examples/coworker-sharing/profiles/coworker-two/config.json",
+    "examples/coworker-sharing/run.py",
+    "examples/example-organization/organizations/example-organization-catalog.json",
+    "examples/example-organization/caravans/platform-team.json",
+    "examples/example-organization/caravans/product-team.json",
+    "examples/org-coordination/README.md",
+    "examples/org-coordination/organization-map.json",
+    "examples/org-coordination/run.py",
+    "examples/sample-organization/README.md",
+    "examples/sample-organization/domain-knowledge/README.md",
+    "examples/sample-organization/domain-knowledge/sample-product.md",
+    "examples/sample-organization/organizations/README.md",
+    "examples/sample-organization/organizations/sample-organization-technology-catalog.md",
+    "examples/sample-organization/configuration-overrides/README.md",
+    "examples/sample-organization/configuration-overrides/sample-product-engineer-ii.md",
+    "examples/sample-organization/resolved/README.md",
+    "examples/sample-organization/resolved/sample-product-engineer-ii.md",
+    "examples/sample-organization/runtime-mappings/README.md",
+    "examples/sample-organization/runtime-mappings/codex-desktop-sample-platform-engineer.md",
+    "examples/sample-organization/runtime-mappings/codex-desktop-sample-product-engineer-ii.md",
+    "examples/sample-organization/runtime-mappings/codex-desktop-sample-product-team.md",
+    "examples/sample-organization/capability-knowledge/README.md",
+    "examples/sample-organization/capability-knowledge/sample-product-integrations-specialization.md",
+    "examples/sample-organization/capability-knowledge/sample-product-workflows-specialization.md",
+    "examples/sample-organization/caravans/README.md",
+    "examples/sample-organization/caravans/sample-product-integrations-team.md",
+    "examples/sample-organization/caravans/sample-product-workflows-team.md",
+    "tests/fixtures/sample-product-engineer-ii.json"
+  ],
+  "vocabulary": "docs/concepts/vocabulary.md",
+  "organizations": [
+    {
+      "id": "sample-organization",
+      "catalogs": [
+        "sample-organization-technology-catalog"
+      ],
+      "teams": [
+        "sample-product-workflows-team",
+        "sample-product-integrations-team"
+      ]
+    },
+    {
+      "id": "example-organization",
+      "catalogs": [
+        "example-organization"
+      ],
+      "teams": [
+        "example-organization-platform-team",
+        "example-organization-product-team"
+      ]
+    }
+  ],
+  "catalogs": [
+    "sample-organization-technology-catalog",
+    "example-organization"
+  ],
+  "runtime_adapters": [
+    "codex-desktop-agent-runtime",
+    "opencode-agent-runtime",
+    "kiro-ide-agent-runtime"
+  ],
+  "skills": [
+    "agent-caravan-builder",
+    "agent-caravan-validator",
+    "agent-caravan-resolver",
+    "agent-caravan-runtime-adapter-builder",
+    "agent-caravan-codex-orchestrator",
+    "agent-caravan-opencode-orchestrator",
+    "agent-caravan-kiro-orchestrator"
+  ],
+  "validation_profiles": [
+    "local-experimental",
+    "team-shared",
+    "organization-shared",
+    "runtime-production"
+  ],
+  "local_profile": "docs/reference/local-profile-layout.md",
+  "release_identity": {
+    "managed_by": [
+      "git-tag",
+      "distribution-artifact"
+    ],
+    "package_version_field": null
+  }
+}

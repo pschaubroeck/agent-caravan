@@ -1,0 +1,57 @@
+{
+  "evaluation_type": "task-output-quality",
+  "scenario_id": "api-validation-error-handling",
+  "status": "not-evaluated",
+  "task": {
+    "objective": "Add consistent validation-error handling to a small API endpoint.",
+    "acceptance_criteria": [
+      "Invalid input is rejected with a stable, documented error response.",
+      "Valid input continues to follow the existing endpoint contract.",
+      "Automated tests cover both invalid and valid input paths."
+    ]
+  },
+  "execution_context": {
+    "team_instance_id": null,
+    "runtime_adapter_id": null,
+    "runtime_version": null,
+    "execution_surface": null
+  },
+  "criteria": [
+    {
+      "id": "acceptance-coverage",
+      "description": "The delivered change satisfies each stated acceptance criterion.",
+      "expected_evidence": [
+        "Reviewed diff mapped to each acceptance criterion",
+        "Relevant test results"
+      ],
+      "status": "not-evaluated",
+      "evidence_reviewed": []
+    },
+    {
+      "id": "contract-correctness",
+      "description": "The error and success behavior is consistent with the existing API contract.",
+      "expected_evidence": [
+        "Existing endpoint contract or API documentation",
+        "Observed or tested response examples"
+      ],
+      "status": "not-evaluated",
+      "evidence_reviewed": []
+    },
+    {
+      "id": "change-reviewability",
+      "description": "The implementation and its evidence are clear enough for an independent reviewer to assess.",
+      "expected_evidence": [
+        "Implementation summary",
+        "Test and validation summary"
+      ],
+      "status": "not-evaluated",
+      "evidence_reviewed": []
+    }
+  ],
+  "evaluation": {
+    "evaluator": null,
+    "method": "Human review against the criteria above",
+    "evaluated_at": null,
+    "notes": "Illustrative pilot contract only. No task output has been assessed."
+  }
+}

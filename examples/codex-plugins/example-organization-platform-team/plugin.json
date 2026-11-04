@@ -1,0 +1,6 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "example-organization-platform-team",
+  "version": "1.0.0",
+  "description": "A versioned Example Organization catalog and team snapshot with safe local setup guidance."
+}

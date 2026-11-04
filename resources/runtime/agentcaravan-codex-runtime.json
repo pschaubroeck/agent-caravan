@@ -1,0 +1,40 @@
+{
+  "artifacts": [
+    {
+      "artifact_type": "runtime-adapter", "id": "codex-desktop-agent-runtime", "version": "1.1.0", "scope": "shared", "name": "Codex Desktop Agent Runtime",
+      "capabilities": {"structured_output_contracts": "native", "dynamic_context_loading": "native", "local_command_execution": "native", "code_editing": "native", "role_handoff": "native", "subagent_delegation": "native", "supervisor_worker_pattern": "native", "tool_approval_gates": "native", "execution_trace": "native", "step_logging": "native", "tool_call_audit": "native", "handoff_traceability": "adapted", "run_metadata": "native", "reasoning_effort_telemetry": "unsupported", "tool_permission_scoping": "adapted", "parallel_lane_execution": "native", "reasoning_effort_control": "native", "document_attachment_support": "native", "durable_memory": "externalized"},
+      "repository_guidance": {"native_files": ["AGENTS.md"], "discovery": "automatic", "reference_policy": "follow-explicit-links"},
+      "observability_model": {
+        "association": "metadata.observability",
+        "constraints": ["capability levels describe the desktop boundary; CLI and delegation surfaces may expose less", "requested model and reasoning settings do not prove effective settings", "optional collection and export remain runtime-owned; no Agent Caravan emitter is provided"]
+      }
+    },
+    {
+      "artifact_type": "runtime-profile", "id": "codex-desktop-information-technology-core-team", "version": "1.1.0", "scope": "shared", "target_adapter_id": "codex-desktop-agent-runtime", "target_team_blueprint_id": "information-technology-core-team",
+      "required_capabilities": ["structured_output_contracts", "dynamic_context_loading", "local_command_execution", "code_editing", "tool_approval_gates", "role_handoff"],
+      "preferred_capabilities": ["execution_trace", "tool_permission_scoping", "reasoning_effort_control", "parallel_lane_execution"],
+      "capability_support_requirements": {"subagent_delegation": "native"},
+      "execution_profile_ids": ["information-technology-core-team-basic-work", "information-technology-core-team-feature-delivery"],
+      "execution": {
+        "observability": {"enabled": false, "export": "local", "capture_content": false},
+        "model_profile": "codex-default",
+        "instructions": "Use the selected Agent Caravan execution profile and preserve its role, handoff, approval, and termination boundaries.",
+        "skills": ["agent-caravan-codex-orchestrator"],
+        "workspace": {"mode": "current-repository"},
+        "output_schema": "agentfoundry-task-completion",
+        "guardrails": ["tool-approval-gates", "structured-handoffs"],
+        "persistence": "task-record-and-session-state",
+        "limits": {"max_review_resolution_iterations": 3}
+      },
+      "execution_projection": {
+        "workflow_construct": "one coordinating runtime task with explicit stage checkpoints",
+        "role_construct": "runtime instructions and skill/tool lanes selected by the orchestrator",
+        "handoff_construct": "structured task-local handoff records",
+        "state_construct": "task, session, and run records when the runtime supports local persistence",
+        "approval_construct": "Codex tool approval gates and explicit human confirmation points",
+        "degraded_behavior": "follow the execution profile topology; use declared serial fallback when optional parallel lane execution is unavailable; do not simulate native subagents"
+      },
+      "fallback_rules": ["run profile-authorized optional parallel lanes serially in the declared order when parallel lane execution is unavailable", "require explicit task summaries when durable memory is externalized"]
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "artifact_type": "execution-profile",
+  "id": "information-technology-core-team-basic-work",
+  "version": "1.1.0",
+  "scope": "shared",
+  "name": "Information Technology Core Team Basic Work",
+  "team_blueprint_id": "information-technology-core-team",
+  "entry_roles": ["engineer"],
+  "activation_policy": {
+    "primary_roles": ["engineer"]
+  },
+  "topology": {
+    "mode": "sequential",
+    "task_ownership": "caller-retains",
+    "handoff_semantics": "mixed",
+    "supported_modes": ["sequential"]
+  },
+  "stages": [
+    {"id": "work", "roles": ["engineer"], "mode": "sequential", "output": "requested task outcome"}
+  ],
+  "communication": {
+    "requires_structured_handoff": false,
+    "handoff_semantics": "mixed",
+    "allowed_role_handoffs": []
+  },
+  "termination": {
+    "success_conditions": ["requested task outcome is completed or clearly reported"],
+    "success_criteria": [
+      {"id": "requested-outcome-complete-or-reported", "description": "Requested task outcome is completed or clearly reported.", "assessor_roles": ["engineer"]}
+    ],
+    "failure_conditions": ["task is blocked or required information is unavailable"]
+  },
+  "escalation": {
+    "unresolved_scope": "program-manager",
+    "unresolved_technical_direction": "tech-owner"
+  },
+  "required_outputs": ["task completion summary"]
+}

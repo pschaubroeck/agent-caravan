@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "agentfoundry/runtime-verification-record.schema.json",
+  "title": "Agent Caravan Runtime Verification Record",
+  "description": "A scenario-scoped report of an adapter verification run. It does not establish general runtime compatibility.",
+  "type": "object",
+  "required": [
+    "record_id",
+    "adapter",
+    "runtime",
+    "execution_surface",
+    "configuration",
+    "scenario",
+    "result",
+    "recorded_at",
+    "provenance",
+    "evidence_refs"
+  ],
+  "properties": {
+    "record_id": {"type": "string", "minLength": 1},
+    "adapter": {
+      "type": "object",
+      "required": ["id", "version"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "version": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "runtime": {
+      "type": "object",
+      "required": ["product", "version"],
+      "properties": {
+        "product": {"type": "string", "minLength": 1},
+        "version": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "execution_surface": {"type": "string", "minLength": 1},
+    "configuration": {
+      "type": "object",
+      "properties": {
+        "safe_fingerprint": {
+          "type": "object",
+          "required": ["algorithm", "value"],
+          "properties": {
+            "algorithm": {"type": "string", "minLength": 1},
+            "value": {"type": "string", "minLength": 1}
+          },
+          "additionalProperties": false
+        },
+        "material_configuration": {
+          "type": "object",
+          "description": "Only non-secret settings material to this scenario; secret-like property names are rejected.",
+          "minProperties": 1,
+          "propertyNames": {
+            "not": {
+              "pattern": "(?:[sS][eE][cC][rR][eE][tT]|[tT][oO][kK][eE][nN]|[pP][aA][sS][sS][wW][oO][rR][dD]|[cC][rR][eE][dD][eE][nN][tT][iI][aA][lL]|[aA][pP][iI][_-]?[kK][eE][yY]|[aA][cC][cC][eE][sS][sS][_-]?[kK][eE][yY]|[pP][rR][iI][vV][aA][tT][eE][_-]?[kK][eE][yY])"
+            }
+          },
+          "additionalProperties": {
+            "type": ["string", "number", "integer", "boolean", "null"]
+          }
+        }
+      },
+      "anyOf": [
+        {"required": ["safe_fingerprint"]},
+        {"required": ["material_configuration"]}
+      ],
+      "additionalProperties": false
+    },
+    "scenario": {
+      "type": "object",
+      "required": ["id", "version"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "version": {"type": "string", "minLength": 1},
+        "capability_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        }
+      },
+      "additionalProperties": false
+    },
+    "result": {
+      "type": "object",
+      "required": ["status", "summary"],
+      "properties": {
+        "status": {"type": "string", "enum": ["pass", "fail", "degraded", "unverified"]},
+        "summary": {"type": "string", "minLength": 1},
+        "limitations": {"type": "array", "items": {"type": "string", "minLength": 1}}
+      },
+      "additionalProperties": false
+    },
+    "recorded_at": {"type": "string", "format": "date-time"},
+    "provenance": {
+      "type": "object",
+      "required": ["kind", "description"],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["adapter-executed", "runtime-receipt", "operator-observed", "agent-reported"]
+        },
+        "description": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "evidence_refs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {"result": {"properties": {"status": {"enum": ["pass", "fail", "degraded"]}}}},
+        "required": ["result"]
+      },
+      "then": {"properties": {"evidence_refs": {"minItems": 1}}}
+    }
+  ],
+  "additionalProperties": false
+}

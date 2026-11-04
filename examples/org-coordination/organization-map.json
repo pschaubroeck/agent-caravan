@@ -1,0 +1,60 @@
+{
+  "name": "Example Organization coordination map",
+  "organization": "Example Organization",
+  "units": [
+    {
+      "id": "technology",
+      "name": "Technology",
+      "parent_unit_id": null
+    },
+    {
+      "id": "engineering",
+      "name": "Engineering",
+      "parent_unit_id": "technology",
+      "coordinator": "engineering-director"
+    }
+  ],
+  "teams": [
+    {
+      "id": "platform",
+      "name": "Platform Team",
+      "unit_id": "engineering",
+      "team_instance_id": "example-organization-platform-team",
+      "reports_to": "engineering-director",
+      "specialties": ["shared-apis", "developer-tooling"],
+      "owns": ["shared platform services and libraries"]
+    },
+    {
+      "id": "product",
+      "name": "Product Team",
+      "unit_id": "engineering",
+      "team_instance_id": "example-organization-product-team",
+      "reports_to": "engineering-director",
+      "specialties": ["customer-workflows"],
+      "owns": ["customer-facing product features"]
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "shared-preferences-change",
+      "request": "Add a customer preference setting that needs a product workflow change and a shared API update.",
+      "route": [
+        {
+          "team_id": "product",
+          "responsibility": "Define the customer preference behavior and update the customer-facing workflow.",
+          "handoff": "Share the agreed preference contract and API requirements with Platform."
+        },
+        {
+          "team_id": "platform",
+          "responsibility": "Implement or update the shared API to support the agreed preference contract.",
+          "handoff": "Return the API contract and integration guidance to Product."
+        },
+        {
+          "team_id": "product",
+          "responsibility": "Integrate the shared API and complete the customer-facing workflow.",
+          "handoff": "Report the integrated outcome to the requester."
+        }
+      ]
+    }
+  ]
+}

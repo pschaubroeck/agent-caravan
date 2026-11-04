@@ -1,0 +1,14 @@
+{
+  "task_id": "<task-id>",
+  "objective": "<bounded objective>",
+  "selected_context": {},
+  "plan": [],
+  "decisions": [],
+  "evidence": [],
+  "approvals": [],
+  "checkpoints": [],
+  "idempotency_records": [],
+  "blockers": [],
+  "artifacts": [],
+  "status": "active"
+}

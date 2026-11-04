@@ -1,0 +1,93 @@
+{
+  "artifacts": [
+    {
+      "artifact_type": "runtime-adapter",
+      "id": "opencode-agent-runtime",
+      "version": "1.1.0",
+      "scope": "shared",
+      "name": "OpenCode Agent Runtime",
+      "capabilities": {
+        "structured_output_contracts": "adapted",
+        "dynamic_context_loading": "native",
+        "local_command_execution": "native",
+        "code_editing": "native",
+        "role_handoff": "adapted",
+        "subagent_delegation": "native",
+        "supervisor_worker_pattern": "adapted",
+        "tool_approval_gates": "native",
+        "execution_trace": "adapted",
+        "step_logging": "adapted",
+        "tool_call_audit": "adapted",
+        "handoff_traceability": "adapted",
+        "run_metadata": "adapted",
+        "reasoning_effort_telemetry": "unsupported",
+        "tool_permission_scoping": "native",
+        "parallel_lane_execution": "adapted",
+        "reasoning_effort_control": "adapted",
+        "document_attachment_support": "adapted",
+        "durable_memory": "externalized"
+      },
+      "repository_guidance": {
+        "native_files": ["AGENTS.md"],
+        "discovery": "automatic",
+        "reference_policy": "follow-explicit-links"
+      },
+      "observability_model": {
+        "association": "metadata.observability",
+        "constraints": ["adapted from attributed CLI, stage, and server events; exact coverage is surface-specific", "requested model and reasoning settings do not prove effective settings", "optional collection and export remain runtime-owned; no Agent Caravan emitter is provided"]
+      }
+    },
+    {
+      "artifact_type": "runtime-profile",
+      "id": "opencode-information-technology-core-team",
+      "version": "1.1.0",
+      "scope": "shared",
+      "target_adapter_id": "opencode-agent-runtime",
+      "target_team_blueprint_id": "information-technology-core-team",
+      "required_capabilities": [
+        "structured_output_contracts",
+        "dynamic_context_loading",
+        "local_command_execution",
+        "code_editing",
+        "tool_approval_gates",
+        "role_handoff"
+      ],
+      "preferred_capabilities": [
+        "execution_trace",
+        "tool_permission_scoping",
+        "reasoning_effort_control",
+        "parallel_lane_execution"
+      ],
+      "capability_support_requirements": {
+        "subagent_delegation": "native"
+      },
+      "execution_profile_ids": [
+        "information-technology-core-team-basic-work",
+        "information-technology-core-team-feature-delivery"
+      ],
+      "execution": {
+        "observability": {"enabled": false, "export": "local", "capture_content": false},
+        "model_profile": "opencode-operator-selected",
+        "instructions": "Use the selected Agent Caravan execution profile; preserve role, handoff, approval, and termination boundaries. Record the actual provider and model ID.",
+        "workspace": {"mode": "current-repository"},
+        "output_schema": "agentfoundry-task-completion",
+        "guardrails": ["tool-approval-gates", "structured-handoffs"],
+        "persistence": "task-record-and-session-state",
+        "limits": {"max_review_resolution_iterations": 3}
+      },
+      "execution_projection": {
+        "workflow_construct": "one coordinating OpenCode session with explicit stage checkpoints",
+        "role_construct": "configured agents and child sessions for authorized role lanes",
+        "handoff_construct": "structured Agent Caravan handoff records linked to OpenCode session references",
+        "state_construct": "Agent Caravan task, session, and run records linked to OpenCode session state",
+        "approval_construct": "OpenCode ask permissions and an attributed server/API approval response when human approval is required",
+        "degraded_behavior": "run only read-only cases through the initial CLI surface; fail closed for writes until a server/API approval-and-resume surface is implemented; use declared serial fallback when parallel timing cannot be proved"
+      },
+      "fallback_rules": [
+        "run profile-authorized optional parallel lanes serially in the declared order when native parallel timing cannot be proved",
+        "require explicit task summaries when durable memory is externalized",
+        "block approval-dependent actions when an attributed approval-and-resume surface is unavailable"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,104 @@
+{
+  "scenario_version": "1.0.0",
+  "scenarios": [
+    {
+      "id": "simple-sequential-execution",
+      "purpose": "Run a bounded implementation task with the smallest effective role set.",
+      "task": {"objective": "Implement an approved feature change", "requested_action": "execute feature delivery workflow"},
+      "expected": {"status": "completed", "active_roles": ["engineer", "quality-engineer"], "completed_stages": ["implementation", "quality-and-uat"], "handoff_statuses": [], "approval_statuses": [], "failure_count": 0}
+    },
+    {
+      "id": "technical-handoff",
+      "purpose": "Transfer an implementation-ready breakdown from technical ownership to engineering.",
+      "task": {"objective": "Implement the approved technical breakdown", "requested_action": "accept implementation handoff"},
+      "expected": {"status": "completed", "active_roles": ["tech-owner", "engineer"], "handoff_statuses": [{"from": "tech-owner", "to": "engineer", "status": "completed"}], "approval_statuses": [], "failure_count": 0}
+    },
+    {
+      "id": "quality-review",
+      "purpose": "Review implementation evidence and return a remediation handoff when coverage is insufficient.",
+      "task": {"objective": "Assess implementation quality and testability", "requested_action": "perform quality review"},
+      "expected": {"status": "completed", "active_roles": ["engineer", "quality-engineer"], "handoff_statuses": [{"from": "quality-engineer", "to": "engineer", "status": "completed"}], "approval_statuses": [], "failure_count": 0}
+    },
+    {
+      "id": "human-approval",
+      "purpose": "Block a sensitive action until the required human approval is recorded.",
+      "task": {"objective": "Introduce a new external dependency", "requested_action": "submit dependency for security review"},
+      "expected": {"status": "blocked-until-approved", "active_roles": ["tech-owner", "program-manager"], "handoff_statuses": [], "approval_statuses": [{"trigger": "new_dependency_or_integration", "status": "required"}], "failure_count": 0}
+    },
+    {
+      "id": "failed-tool-call",
+      "purpose": "Record a failed tool request, bounded retry, and escalation without silently repeating unsafe work.",
+      "task": {"objective": "Inspect an approved repository source", "requested_action": "execute repository inspection tool"},
+      "expected": {"status": "escalated", "active_roles": ["engineer", "tech-owner"], "handoff_statuses": [{"from": "engineer", "to": "tech-owner", "status": "completed"}], "approval_statuses": [], "failure_count": 1, "max_retries": 2}
+    },
+    {
+      "id": "resumable-task",
+      "purpose": "Resume a task in a new run without replacing prior run evidence.",
+      "task": {"objective": "Continue an interrupted implementation task", "requested_action": "resume from the last accepted handoff"},
+      "expected": {"status": "completed", "active_roles": ["engineer", "quality-engineer"], "run_count": 2, "same_task_id": true, "prior_run_preserved": true, "failure_count": 0}
+    },
+    {
+      "id": "completion-evidence",
+      "purpose": "Produce a normalized completion record with evidence, approvals, artifacts, and unresolved conditions.",
+      "task": {"objective": "Close a completed feature task", "requested_action": "record completion evidence"},
+      "workflow": {"success_criteria": [{"id": "quality-evidence-recorded", "description": "Quality evidence was recorded.", "assessor_roles": ["quality-engineer"]}], "assessment": {"criteria": [{"criterion_id": "quality-evidence-recorded", "status": "met", "assessor_role_id": "quality-engineer", "rationale": "The quality engineer recorded passing evidence.", "evidence_refs": ["completion-evidence-quality-1"]}]}},
+      "expected": {"status": "completed", "active_roles": ["engineer", "quality-engineer", "product-owner"], "required_completion_fields": ["decisions", "evidence", "approvals", "artifacts", "unresolved_conditions"], "required_evidence_records": [{"evidence_id": "completion-evidence-quality-1", "kind": "quality-evidence", "status": "passed", "require_references": true}], "workflow_assessment_status": "met", "workflow_criteria_statuses": [{"criterion_id": "quality-evidence-recorded", "status": "met"}], "failure_count": 0}
+    },
+    {
+      "id": "tool-permission-boundary",
+      "purpose": "Prevent a side-effecting tool request from bypassing its approval and evidence requirements.",
+      "task": {"objective": "Apply an approved remote change", "requested_action": "request a remote mutation tool"},
+      "expected": {"status": "blocked-until-approved", "active_roles": ["engineer", "program-manager"], "handoff_statuses": [], "approval_statuses": [{"trigger": "remote_mutation", "status": "required"}], "required_tool_evidence": ["tool-request", "approval", "tool-result"], "failure_count": 0}
+    },
+    {
+      "id": "interrupted-run",
+      "purpose": "Pause a run without losing task identity or treating an incomplete run as a completed result.",
+      "task": {"objective": "Pause implementation at an accepted checkpoint", "requested_action": "interrupt execution"},
+      "expected": {"status": "interrupted", "active_roles": ["engineer"], "run_count": 1, "same_task_id": true, "checkpoint_status": "accepted", "resume_required": true, "prior_run_preserved": true, "failure_count": 0}
+    },
+    {
+      "id": "checkpoint-resume",
+      "purpose": "Resume from an accepted checkpoint in a new run while preserving the original run record.",
+      "task": {"objective": "Continue implementation from the accepted checkpoint", "requested_action": "resume from checkpoint"},
+      "expected": {"status": "completed", "active_roles": ["engineer", "quality-engineer"], "run_count": 2, "same_task_id": true, "checkpoint_status": "resumed", "replay_from_stage": "implementation", "prior_run_preserved": true, "failure_count": 0}
+    },
+    {
+      "id": "idempotent-side-effect-replay",
+      "purpose": "Ensure replaying the same side-effect request does not apply the external mutation twice.",
+      "task": {"objective": "Apply one approved external change", "requested_action": "replay an approved mutation request"},
+      "expected": {"status": "completed", "active_roles": ["engineer", "program-manager"], "idempotency_status": "replayed", "side_effect_count": 1, "idempotency_key_required": true, "failure_count": 0}
+    },
+    {
+      "id": "degraded-capability-fallback",
+      "purpose": "Preserve semantic completion when an optional runtime capability is adapted through a declared serial fallback.",
+      "task": {"objective": "Complete work without native parallel lanes", "requested_action": "run optional lanes with fallback"},
+      "expected": {"status": "degraded", "active_roles": ["engineer", "quality-engineer"], "degraded_capabilities": ["parallel_lane_execution"], "serial_fallback_recorded": true, "failure_count": 0}
+    },
+    {
+      "id": "dependency-wait-with-independent-work",
+      "purpose": "Verify that a waiting work item respects its dependency while independent work proceeds, and that the normalized timeline records the wait and overlap.",
+      "task": {"objective": "Resolve a design question while preparing implementation", "requested_action": "wait for the design decision and continue independent work"},
+      "work_items": [
+        {"id": "design", "stage_id": "implementation", "role_id": "quality-engineer", "purpose": "Resolve the independent design question"},
+        {"id": "independent-analysis", "stage_id": "implementation", "role_id": "software-architect", "purpose": "Perform unrelated analysis while the design question is being resolved"},
+        {"id": "implement", "stage_id": "implementation", "role_id": "engineer", "purpose": "Implement after the design decision", "depends_on": ["design"]}
+      ],
+      "work_item_events": [
+        {"work_item_id": "implement", "role_id": "engineer", "stage_id": "implementation", "status": "queued", "timestamp": "2026-10-01T10:00:00Z", "dependency_ids": ["design"], "evidence_source": "simulated"},
+        {"work_item_id": "implement", "role_id": "engineer", "stage_id": "implementation", "status": "waiting", "timestamp": "2026-10-01T10:01:00Z", "dependency_ids": ["design"], "evidence_source": "simulated"},
+        {"work_item_id": "independent-analysis", "role_id": "software-architect", "stage_id": "implementation", "status": "queued", "timestamp": "2026-10-01T10:01:00Z", "dependency_ids": [], "evidence_source": "simulated"},
+        {"work_item_id": "design", "role_id": "quality-engineer", "stage_id": "implementation", "status": "started", "timestamp": "2026-10-01T10:02:00Z", "dependency_ids": [], "evidence_source": "simulated"},
+        {"work_item_id": "independent-analysis", "role_id": "software-architect", "stage_id": "implementation", "status": "started", "timestamp": "2026-10-01T10:03:00Z", "dependency_ids": [], "evidence_source": "simulated"},
+        {"work_item_id": "design", "role_id": "quality-engineer", "stage_id": "implementation", "status": "completed", "timestamp": "2026-10-01T10:05:00Z", "dependency_ids": [], "evidence_source": "simulated"},
+        {"work_item_id": "implement", "role_id": "engineer", "stage_id": "implementation", "status": "resumed", "timestamp": "2026-10-01T10:06:00Z", "dependency_ids": ["design"], "evidence_source": "simulated"},
+        {"work_item_id": "independent-analysis", "role_id": "software-architect", "stage_id": "implementation", "status": "completed", "timestamp": "2026-10-01T10:09:00Z", "dependency_ids": [], "evidence_source": "simulated"},
+        {"work_item_id": "implement", "role_id": "engineer", "stage_id": "implementation", "status": "completed", "timestamp": "2026-10-01T10:10:00Z", "dependency_ids": ["design"], "evidence_source": "simulated"}
+      ],
+      "expected": {
+        "status": "completed",
+        "active_roles": ["engineer", "quality-engineer"],
+        "failure_count": 0
+      }
+    }
+  ]
+}
