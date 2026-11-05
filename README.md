@@ -26,7 +26,7 @@ harness remains responsible for executing the work.
 
 The repository contains the framework specifications, reference roles and team artifacts, domain and specialization examples, runtime profiles, shareable skills, and the first machine-readable resolution prototype.
 
-The [catalog manifest](catalog-manifest.json) indexes the reference distribution. Git tags identify releases; GitHub Actions verifies changes and publishes wheel and source-distribution files on GitHub Releases for version tags created in GitHub or pushed to the repository. PyPI publishing is not configured.
+The [catalog manifest](catalog-manifest.json) indexes the reference distribution. Git tags identify releases; the GitHub Actions release workflow verifies changes, then publishes wheel and source-distribution files on GitHub Releases. PyPI publishing is not configured.
 
 The repository is also the canonical source for the shareable [Agent Caravan skills](skills/), including Codex, OpenCode, and Kiro IDE orchestration entry points. Runtime installation is deliberately separate so a Codex, Droid, Claude, SDK, broker, or other consumer can choose its own adapter and installation mechanism.
 
@@ -98,11 +98,11 @@ The framework does not require GitLab, Git, JSON, or any particular storage prov
 ### GitHub Actions and packaging
 
 GitHub Actions runs preflight, tests, example resolution, CLI smoke, and the
-isolated installed-wheel smoke check on Python 3.10 and 3.14. Creating a
-version tag such as `v0.1.0` in GitHub or pushing one to the repository runs
-those checks, builds a wheel and source
-distribution, validates both, and publishes them as assets on a GitHub Release.
-See the [release guide](docs/maintainers/releasing.md) for the maintainer flow.
+isolated installed-wheel smoke check on Python 3.10 and 3.14. To release,
+choose **Actions → CI → Run workflow**, select `main`, and enter a version such
+as `v0.1.0`. After those checks pass, the workflow creates the version tag,
+builds and validates both package formats, and publishes a GitHub Release.
+See the [release guide](docs/maintainers/releasing.md) for details.
 `pyproject.toml` contains package metadata and `agentcaravan.scripts` supplies
 the local verification commands.
 

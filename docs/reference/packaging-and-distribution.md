@@ -322,12 +322,12 @@ The directory may be created on first use. Its naming and layout are requirement
 ## Current State
 
 GitHub Actions verifies the package and repository on Python 3.10 and 3.14.
-Creating a version tag in GitHub or pushing one to the repository runs those
-checks, builds a wheel and source distribution, validates both, and publishes
-them as assets on a GitHub Release. PyPI publishing is not configured. The
-package can also be built locally with the pinned build tools; `pyproject.toml`
-contains its metadata and `agentcaravan.scripts` provides the verification
-commands.
+The release workflow runs those checks, then creates a version tag, builds a
+wheel and source distribution, validates both, and publishes them as assets on
+a GitHub Release. Start it from **Actions → CI → Run workflow** and supply a
+version such as `v0.1.0`. PyPI publishing is not configured. The package can
+also be built locally with the pinned build tools; `pyproject.toml` contains
+its metadata and `agentcaravan.scripts` provides the verification commands.
 
 The built package contains the reusable core resources and supported skills
 listed above. It does not contain organization-specific catalogs, team

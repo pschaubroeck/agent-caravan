@@ -3,16 +3,19 @@ name: CI
 on:
   push:
     branches: ["**"]
-  create:
   pull_request:
   workflow_dispatch:
+    inputs:
+      version:
+        description: Release tag, for example v0.1.0
+        required: true
+        type: string
 
 permissions:
   contents: read
 
 jobs:
   verify:
-    if: github.event_name != 'create' || startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -39,7 +42,7 @@ jobs:
         run: make package-smoke
 
   release:
-    if: github.event_name == 'create' && startsWith(github.ref, 'refs/tags/v')
+    if: github.event_name == 'workflow_dispatch'
     needs: verify
     runs-on: ubuntu-latest
     permissions:
@@ -51,21 +54,36 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.14'
+      - name: Validate release request and create local version tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ inputs.version }}
+        run: |
+          if [[ "$GITHUB_REF" != "refs/heads/main" ]]; then
+            echo "Run the release workflow from main."
+            exit 1
+          fi
+          if [[ ! "$RELEASE_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Release version must use the vMAJOR.MINOR.PATCH format."
+            exit 1
+          fi
+          if git ls-remote --exit-code --tags origin "refs/tags/${RELEASE_TAG}" >/dev/null 2>&1; then
+            echo "Tag ${RELEASE_TAG} already exists. Choose a new version."
+            exit 1
+          fi
+          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            echo "A release for ${RELEASE_TAG} already exists. Choose a new version."
+            exit 1
+          fi
+          git tag -a "$RELEASE_TAG" -m "Agent Caravan ${RELEASE_TAG#v}" "$GITHUB_SHA"
       - name: Install pinned build and publication tools
         run: python -m pip install -r requirements.txt
       - name: Build wheel and source distribution
         run: python -m build
       - name: Validate distributions
         run: python -m twine check dist/*
-      - name: Create a draft release when one does not exist
+      - name: Create GitHub Release with package files
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1 || gh release create "$GITHUB_REF_NAME" --draft --title "Agent Caravan $GITHUB_REF_NAME" --generate-notes --verify-tag
-      - name: Attach package files
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: gh release upload "$GITHUB_REF_NAME" dist/* --clobber
-      - name: Publish release after checks pass
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: gh release edit "$GITHUB_REF_NAME" --draft=false
+          RELEASE_TAG: ${{ inputs.version }}
+        run: gh release create "$RELEASE_TAG" dist/* --title "Agent Caravan $RELEASE_TAG" --generate-notes --target "$GITHUB_SHA"
