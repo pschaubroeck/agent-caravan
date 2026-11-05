@@ -1,4 +1,5 @@
 # Pinned build and publication tools.
+build==1.5.0
 setuptools==80.10.2
 setuptools-scm==9.2.2
 twine==6.2.0

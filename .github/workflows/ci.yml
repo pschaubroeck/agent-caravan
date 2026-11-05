@@ -2,6 +2,8 @@ name: CI
 
 on:
   push:
+    branches: ["**"]
+    tags: ["v*"]
   pull_request:
   workflow_dispatch:
 
@@ -34,3 +36,27 @@ jobs:
         run: make cli-smoke
       - name: Build and test installed wheel
         run: make package-smoke
+
+  release:
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    needs: verify
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - name: Install pinned build and publication tools
+        run: python -m pip install -r requirements.txt
+      - name: Build wheel and source distribution
+        run: python -m build
+      - name: Validate distributions
+        run: python -m twine check dist/*
+      - name: Publish GitHub Release with package files
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" dist/* --title "Agent Caravan $GITHUB_REF_NAME" --generate-notes --verify-tag

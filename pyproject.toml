@@ -7,6 +7,8 @@ name = "agent-caravan"
 dynamic = ["version"]
 description = "Runtime-neutral organization and team framework utilities"
 readme = "README.md"
+license = "0BSD"
+license-files = ["LICENSE"]
 requires-python = ">=3.10"
 dependencies = ["jsonschema==4.26.0"]
 
