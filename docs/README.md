@@ -36,7 +36,7 @@ Related references:
 - [Repository getting started](getting-started.md) — Python checkout setup,
   local CLI access, and contributor checks.
 - [Developer examples](developer-examples.md) — supplemental artifact-authoring
-  and harness examples. Use these examples alongside the getting started guide.
+  and harness examples. Use these examples alongside the user guide.
 - [Local profile layout](reference/local-profile-layout.md) — local sources,
   overrides, sessions, and cache.
 - [Codex adapter](integrations/codex-adapter.md) — the concrete Codex
@@ -71,7 +71,7 @@ defines artifact boundaries and verification commands.
 Maintainer references:
 
 - [Configuration and design notes](maintainers/configuration-and-design-notes.md)
-  — non-normative proposals and unresolved configuration, runtime-boundary,
-  evidence, and conformance questions.
+  — historical design rationale, proposals, and unresolved questions; check
+  current specifications before treating these notes as guidance.
 - [Open-source alternatives](maintainers/open-source-alternatives.md) —
   research reference, not product guidance or onboarding.

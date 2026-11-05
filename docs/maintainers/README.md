@@ -1,12 +1,12 @@
 ---
 type: Directory Index
 title: Maintainer Documentation
-description: Index of internal Agent Caravan design history, unresolved questions, and research.
+description: Index of historical Agent Caravan design notes and research.
 ---
 
 # Maintainer Documentation
 
-This area contains internal design history, unresolved questions, and research.
+This area contains public design history, unresolved questions, and research.
 These documents are not part of the normal Agent Caravan user reading path and
 should not be treated as normative framework behavior.
 

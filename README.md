@@ -22,7 +22,7 @@ harness remains responsible for executing the work.
 
 The repository contains the framework specifications, reference roles and team artifacts, domain and specialization examples, runtime profiles, shareable skills, and the first machine-readable resolution prototype.
 
-The [catalog manifest](catalog-manifest.json) indexes the reference distribution. Release identity is supplied by Git tags, GitLab generic artifacts, or another distribution provider.
+The [catalog manifest](catalog-manifest.json) indexes the reference distribution. Git tags identify releases; GitHub Actions verifies changes but does not publish packages.
 
 The repository is also the canonical source for the shareable [Agent Caravan skills](skills/), including Codex, OpenCode, and Kiro IDE orchestration entry points. Runtime installation is deliberately separate so a Codex, Droid, Claude, SDK, broker, or other consumer can choose its own adapter and installation mechanism.
 
@@ -30,6 +30,21 @@ For product requirements, installation, setup, and supported user workflows,
 start with the [Agent Caravan user guide](docs/user-guide.md).
 If you are contributing to this repository, use the separate
 [repository setup guide](docs/getting-started.md).
+
+### Working with an AI assistant
+
+Start with the user guide when setting up or using Agent Caravan. For code or
+catalog changes, ask the assistant to inspect the relevant specification,
+existing artifact, and tests before editing. Keep changes within the artifact
+boundaries in [`AGENTS.md`](AGENTS.md), preserve stable machine identifiers, and
+run the focused repository checks for the change. Use the skills in [`skills/`](skills/)
+for setup, validation, resolution, and runtime-specific guidance; they describe
+the framework but do not replace the host runtime's permissions or execution
+capabilities.
+
+Keep plans for one-off tasks in the issue, pull request, or working conversation.
+When work produces durable decisions or evidence, record those in the relevant
+maintainer or experiment report, then remove the completed task plan.
 
 Browse the [examples index](examples/README.md) for the generic coworker-sharing scenario, its Codex plugin package, and separately labeled organization-specific references.
 

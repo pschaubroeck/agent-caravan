@@ -4,7 +4,17 @@
 
 This repository is the canonical source for the Agent Caravan framework specifications, reference catalog artifacts, resolver prototype, and shareable Agent Caravan skills.
 
-Keep the framework runtime-neutral and storage-agnostic. Git and GitLab are the current distribution implementation, not requirements imposed on the framework contract.
+Keep the framework runtime-neutral and storage-agnostic. GitHub hosts this reference repository; no Git provider is required by the framework contract.
+
+## AI-Assisted Work
+
+- For product setup and usage, follow [`docs/user-guide.md`](docs/user-guide.md). For repository contribution setup, follow [`docs/getting-started.md`](docs/getting-started.md).
+- Before changing an artifact, read its specification and inspect a current example plus the validator or tests that enforce its contract.
+- Treat schemas, specifications, and canonical serialized artifacts as the source of contract truth. Examples illustrate supported use; skills guide assistant workflows.
+- Keep changes narrow and preserve existing artifact IDs, versions, machine keys, and compatibility behavior unless the task explicitly changes them.
+- Use the relevant `agent-caravan-*` skill for framework setup, resolution, validation, or runtime integration when it fits the task. Do not assume a skill grants runtime permissions or that a plan means work has been executed.
+- Keep one-off plans and checklists in the task conversation or issue. Do not add completed task plans to the repository. Promote durable decisions, unresolved questions, or reproducible evidence into the corresponding specification, maintainer note, or experiment report.
+- Never copy credentials, private user data, or unreviewed runtime transcripts into shared artifacts or documentation.
 
 ## Artifact Boundaries
 
@@ -22,7 +32,7 @@ Keep the framework runtime-neutral and storage-agnostic. Git and GitLab are the 
 
 The `skills/agent-caravan-*` directories are shareable product skill sources. Package installation bundles these sources; explicit initialization installs the shared skills and selected runtime orchestrator. Codex defaults to `~/.agents/skills/`; OpenCode defaults to `~/.config/opencode/skills/`.
 
-When changing a skill, preserve the distinction between framework semantics, runtime adapter behavior, and local operator configuration.
+When changing a skill, preserve the distinction between framework semantics, runtime integration behavior, and local operator configuration.
 
 ## Verification
 
@@ -48,7 +58,7 @@ selected runtime skill location (`~/.agents/skills/` for Codex or
 locations. It must ask before replacing an existing organization or
 skill link, and must refuse to remove a non-symlink skill path.
 
-Validate changed skills with the available skill-authoring validator when the local runtime provides it. Do not install dependencies or mutate remote GitLab, Confluence, Jira, or runtime state as part of local verification.
+Validate changed skills with the available skill-authoring validator when the local runtime provides it. Do not install dependencies or mutate remote repositories, documentation systems, or runtime state as part of local verification.
 
 ## Change Discipline
 
