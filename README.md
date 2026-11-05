@@ -1,5 +1,8 @@
 # Agent Caravan
 
+[![CI](https://github.com/pschaubroeck/agent-caravan/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/pschaubroeck/agent-caravan/actions/workflows/ci.yml)
+![Tested with Python 3.10 and 3.14](https://img.shields.io/badge/tested%20with-Python%203.10%20%7C%203.14-blue)
+
 Agent Caravan is a runtime-neutral framework for defining, composing, validating, and adapting AI organizations and teams.
 
 ## Spend Less Time Rebuilding AI Workflows
